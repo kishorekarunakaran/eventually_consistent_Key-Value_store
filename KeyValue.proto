@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+message Get {
+  uint32 key=1;
+  uint32 consistency = 2;
+  uint32 readRepair=3;
+}
+
+message Put {
+  uint32 key = 1;
+  string value = 2;
+  uint32 consistency = 3;
+  uint32 id = 4;
+  uint64 time = 5;
+  uint32 hinteddHandoff=6;
+}
+
+message WriteResponse{
+  uint32 id = 1;
+  bool writeReply = 2;
+}
+
+message ReturnValue {
+  string key = 1;
+  uint64 time = 2;
+}
+
+message KeyValueMessage {
+  oneof KeyValue_message {
+    Get get = 1;
+    Put put = 2;
+    WriteResponse write_response = 3;
+    ReturnValue return_value = 4;  
+  }
+}
+
