@@ -44,12 +44,12 @@ public class Client{
 				putMethod.setConsistency(clevel);
 				keymessage.setPutKey(putMethod.build());
 			}
-			keymessage.setConnection(1);
 			try {
 				Socket send;
 				if(cc.sock == null) {
 					System.out.println("Socket");
 					send = new Socket(cc.coIp,cc.coPort);
+					keymessage.setConnection(1);
 					cc.setSocket(send);
 				}
 				else {
