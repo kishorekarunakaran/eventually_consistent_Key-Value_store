@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-message Get {
+message Get{
   uint32 key=1;
   uint32 consistency = 2;
   uint32 readRepair=3;
 }
 
-message Put {
+message Put{
   uint32 key = 1;
   string value = 2;
   uint32 consistency = 3;
@@ -26,11 +26,12 @@ message ReturnValue {
 }
 
 message KeyValueMessage {
-  oneof KeyValue_message {
-    Get get = 1;
-    Put put = 2;
+  oneof keyvalue_message {
+    Get get_key = 1;
+    Put put_key = 2;
     WriteResponse write_response = 3;
     ReturnValue return_value = 4;  
   }
+  uint32 connection = 5;
 }
 

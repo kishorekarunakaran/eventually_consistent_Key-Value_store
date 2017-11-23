@@ -17,17 +17,17 @@ public final class KeyValue {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional uint32 key = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
     int getKey();
 
     /**
-     * <code>optional uint32 consistency = 2;</code>
+     * <code>uint32 consistency = 2;</code>
      */
     int getConsistency();
 
     /**
-     * <code>optional uint32 readRepair = 3;</code>
+     * <code>uint32 readRepair = 3;</code>
      */
     int getReadRepair();
   }
@@ -38,6 +38,7 @@ public final class KeyValue {
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:Get)
       GetOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use Get.newBuilder() to construct.
     private Get(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -51,7 +52,7 @@ public final class KeyValue {
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+      return this.unknownFields;
     }
     private Get(
         com.google.protobuf.CodedInputStream input,
@@ -59,6 +60,8 @@ public final class KeyValue {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -68,7 +71,8 @@ public final class KeyValue {
               done = true;
               break;
             default: {
-              if (!input.skipField(tag)) {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -96,6 +100,7 @@ public final class KeyValue {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
@@ -114,7 +119,7 @@ public final class KeyValue {
     public static final int KEY_FIELD_NUMBER = 1;
     private int key_;
     /**
-     * <code>optional uint32 key = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
     public int getKey() {
       return key_;
@@ -123,7 +128,7 @@ public final class KeyValue {
     public static final int CONSISTENCY_FIELD_NUMBER = 2;
     private int consistency_;
     /**
-     * <code>optional uint32 consistency = 2;</code>
+     * <code>uint32 consistency = 2;</code>
      */
     public int getConsistency() {
       return consistency_;
@@ -132,7 +137,7 @@ public final class KeyValue {
     public static final int READREPAIR_FIELD_NUMBER = 3;
     private int readRepair_;
     /**
-     * <code>optional uint32 readRepair = 3;</code>
+     * <code>uint32 readRepair = 3;</code>
      */
     public int getReadRepair() {
       return readRepair_;
@@ -159,6 +164,7 @@ public final class KeyValue {
       if (readRepair_ != 0) {
         output.writeUInt32(3, readRepair_);
       }
+      unknownFields.writeTo(output);
     }
 
     public int getSerializedSize() {
@@ -178,11 +184,11 @@ public final class KeyValue {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(3, readRepair_);
       }
+      size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
@@ -200,6 +206,7 @@ public final class KeyValue {
           == other.getConsistency());
       result = result && (getReadRepair()
           == other.getReadRepair());
+      result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
 
@@ -209,7 +216,7 @@ public final class KeyValue {
         return memoizedHashCode;
       }
       int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KEY_FIELD_NUMBER;
       hash = (53 * hash) + getKey();
       hash = (37 * hash) + CONSISTENCY_FIELD_NUMBER;
@@ -221,6 +228,17 @@ public final class KeyValue {
       return hash;
     }
 
+    public static KeyValue.Get parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static KeyValue.Get parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static KeyValue.Get parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -374,7 +392,7 @@ public final class KeyValue {
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
       public Builder clearField(
@@ -387,12 +405,12 @@ public final class KeyValue {
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -415,6 +433,7 @@ public final class KeyValue {
         if (other.getReadRepair() != 0) {
           setReadRepair(other.getReadRepair());
         }
+        this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
       }
@@ -443,13 +462,13 @@ public final class KeyValue {
 
       private int key_ ;
       /**
-       * <code>optional uint32 key = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
       public int getKey() {
         return key_;
       }
       /**
-       * <code>optional uint32 key = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
       public Builder setKey(int value) {
         
@@ -458,7 +477,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 key = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
       public Builder clearKey() {
         
@@ -469,13 +488,13 @@ public final class KeyValue {
 
       private int consistency_ ;
       /**
-       * <code>optional uint32 consistency = 2;</code>
+       * <code>uint32 consistency = 2;</code>
        */
       public int getConsistency() {
         return consistency_;
       }
       /**
-       * <code>optional uint32 consistency = 2;</code>
+       * <code>uint32 consistency = 2;</code>
        */
       public Builder setConsistency(int value) {
         
@@ -484,7 +503,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 consistency = 2;</code>
+       * <code>uint32 consistency = 2;</code>
        */
       public Builder clearConsistency() {
         
@@ -495,13 +514,13 @@ public final class KeyValue {
 
       private int readRepair_ ;
       /**
-       * <code>optional uint32 readRepair = 3;</code>
+       * <code>uint32 readRepair = 3;</code>
        */
       public int getReadRepair() {
         return readRepair_;
       }
       /**
-       * <code>optional uint32 readRepair = 3;</code>
+       * <code>uint32 readRepair = 3;</code>
        */
       public Builder setReadRepair(int value) {
         
@@ -510,7 +529,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 readRepair = 3;</code>
+       * <code>uint32 readRepair = 3;</code>
        */
       public Builder clearReadRepair() {
         
@@ -520,12 +539,12 @@ public final class KeyValue {
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.mergeUnknownFields(unknownFields);
       }
 
 
@@ -572,37 +591,37 @@ public final class KeyValue {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional uint32 key = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
     int getKey();
 
     /**
-     * <code>optional string value = 2;</code>
+     * <code>string value = 2;</code>
      */
     java.lang.String getValue();
     /**
-     * <code>optional string value = 2;</code>
+     * <code>string value = 2;</code>
      */
     com.google.protobuf.ByteString
         getValueBytes();
 
     /**
-     * <code>optional uint32 consistency = 3;</code>
+     * <code>uint32 consistency = 3;</code>
      */
     int getConsistency();
 
     /**
-     * <code>optional uint32 id = 4;</code>
+     * <code>uint32 id = 4;</code>
      */
     int getId();
 
     /**
-     * <code>optional uint64 time = 5;</code>
+     * <code>uint64 time = 5;</code>
      */
     long getTime();
 
     /**
-     * <code>optional uint32 hinteddHandoff = 6;</code>
+     * <code>uint32 hinteddHandoff = 6;</code>
      */
     int getHinteddHandoff();
   }
@@ -613,6 +632,7 @@ public final class KeyValue {
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:Put)
       PutOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use Put.newBuilder() to construct.
     private Put(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -629,7 +649,7 @@ public final class KeyValue {
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+      return this.unknownFields;
     }
     private Put(
         com.google.protobuf.CodedInputStream input,
@@ -637,6 +657,8 @@ public final class KeyValue {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -646,7 +668,8 @@ public final class KeyValue {
               done = true;
               break;
             default: {
-              if (!input.skipField(tag)) {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -690,6 +713,7 @@ public final class KeyValue {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
@@ -708,7 +732,7 @@ public final class KeyValue {
     public static final int KEY_FIELD_NUMBER = 1;
     private int key_;
     /**
-     * <code>optional uint32 key = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
     public int getKey() {
       return key_;
@@ -717,7 +741,7 @@ public final class KeyValue {
     public static final int VALUE_FIELD_NUMBER = 2;
     private volatile java.lang.Object value_;
     /**
-     * <code>optional string value = 2;</code>
+     * <code>string value = 2;</code>
      */
     public java.lang.String getValue() {
       java.lang.Object ref = value_;
@@ -732,7 +756,7 @@ public final class KeyValue {
       }
     }
     /**
-     * <code>optional string value = 2;</code>
+     * <code>string value = 2;</code>
      */
     public com.google.protobuf.ByteString
         getValueBytes() {
@@ -751,7 +775,7 @@ public final class KeyValue {
     public static final int CONSISTENCY_FIELD_NUMBER = 3;
     private int consistency_;
     /**
-     * <code>optional uint32 consistency = 3;</code>
+     * <code>uint32 consistency = 3;</code>
      */
     public int getConsistency() {
       return consistency_;
@@ -760,7 +784,7 @@ public final class KeyValue {
     public static final int ID_FIELD_NUMBER = 4;
     private int id_;
     /**
-     * <code>optional uint32 id = 4;</code>
+     * <code>uint32 id = 4;</code>
      */
     public int getId() {
       return id_;
@@ -769,7 +793,7 @@ public final class KeyValue {
     public static final int TIME_FIELD_NUMBER = 5;
     private long time_;
     /**
-     * <code>optional uint64 time = 5;</code>
+     * <code>uint64 time = 5;</code>
      */
     public long getTime() {
       return time_;
@@ -778,7 +802,7 @@ public final class KeyValue {
     public static final int HINTEDDHANDOFF_FIELD_NUMBER = 6;
     private int hinteddHandoff_;
     /**
-     * <code>optional uint32 hinteddHandoff = 6;</code>
+     * <code>uint32 hinteddHandoff = 6;</code>
      */
     public int getHinteddHandoff() {
       return hinteddHandoff_;
@@ -814,6 +838,7 @@ public final class KeyValue {
       if (hinteddHandoff_ != 0) {
         output.writeUInt32(6, hinteddHandoff_);
       }
+      unknownFields.writeTo(output);
     }
 
     public int getSerializedSize() {
@@ -844,11 +869,11 @@ public final class KeyValue {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(6, hinteddHandoff_);
       }
+      size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
@@ -872,6 +897,7 @@ public final class KeyValue {
           == other.getTime());
       result = result && (getHinteddHandoff()
           == other.getHinteddHandoff());
+      result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
 
@@ -881,7 +907,7 @@ public final class KeyValue {
         return memoizedHashCode;
       }
       int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KEY_FIELD_NUMBER;
       hash = (53 * hash) + getKey();
       hash = (37 * hash) + VALUE_FIELD_NUMBER;
@@ -900,6 +926,17 @@ public final class KeyValue {
       return hash;
     }
 
+    public static KeyValue.Put parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static KeyValue.Put parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static KeyValue.Put parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1062,7 +1099,7 @@ public final class KeyValue {
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
       public Builder clearField(
@@ -1075,12 +1112,12 @@ public final class KeyValue {
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -1113,6 +1150,7 @@ public final class KeyValue {
         if (other.getHinteddHandoff() != 0) {
           setHinteddHandoff(other.getHinteddHandoff());
         }
+        this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
       }
@@ -1141,13 +1179,13 @@ public final class KeyValue {
 
       private int key_ ;
       /**
-       * <code>optional uint32 key = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
       public int getKey() {
         return key_;
       }
       /**
-       * <code>optional uint32 key = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
       public Builder setKey(int value) {
         
@@ -1156,7 +1194,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 key = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
       public Builder clearKey() {
         
@@ -1167,7 +1205,7 @@ public final class KeyValue {
 
       private java.lang.Object value_ = "";
       /**
-       * <code>optional string value = 2;</code>
+       * <code>string value = 2;</code>
        */
       public java.lang.String getValue() {
         java.lang.Object ref = value_;
@@ -1182,7 +1220,7 @@ public final class KeyValue {
         }
       }
       /**
-       * <code>optional string value = 2;</code>
+       * <code>string value = 2;</code>
        */
       public com.google.protobuf.ByteString
           getValueBytes() {
@@ -1198,7 +1236,7 @@ public final class KeyValue {
         }
       }
       /**
-       * <code>optional string value = 2;</code>
+       * <code>string value = 2;</code>
        */
       public Builder setValue(
           java.lang.String value) {
@@ -1211,7 +1249,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional string value = 2;</code>
+       * <code>string value = 2;</code>
        */
       public Builder clearValue() {
         
@@ -1220,7 +1258,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional string value = 2;</code>
+       * <code>string value = 2;</code>
        */
       public Builder setValueBytes(
           com.google.protobuf.ByteString value) {
@@ -1236,13 +1274,13 @@ public final class KeyValue {
 
       private int consistency_ ;
       /**
-       * <code>optional uint32 consistency = 3;</code>
+       * <code>uint32 consistency = 3;</code>
        */
       public int getConsistency() {
         return consistency_;
       }
       /**
-       * <code>optional uint32 consistency = 3;</code>
+       * <code>uint32 consistency = 3;</code>
        */
       public Builder setConsistency(int value) {
         
@@ -1251,7 +1289,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 consistency = 3;</code>
+       * <code>uint32 consistency = 3;</code>
        */
       public Builder clearConsistency() {
         
@@ -1262,13 +1300,13 @@ public final class KeyValue {
 
       private int id_ ;
       /**
-       * <code>optional uint32 id = 4;</code>
+       * <code>uint32 id = 4;</code>
        */
       public int getId() {
         return id_;
       }
       /**
-       * <code>optional uint32 id = 4;</code>
+       * <code>uint32 id = 4;</code>
        */
       public Builder setId(int value) {
         
@@ -1277,7 +1315,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 id = 4;</code>
+       * <code>uint32 id = 4;</code>
        */
       public Builder clearId() {
         
@@ -1288,13 +1326,13 @@ public final class KeyValue {
 
       private long time_ ;
       /**
-       * <code>optional uint64 time = 5;</code>
+       * <code>uint64 time = 5;</code>
        */
       public long getTime() {
         return time_;
       }
       /**
-       * <code>optional uint64 time = 5;</code>
+       * <code>uint64 time = 5;</code>
        */
       public Builder setTime(long value) {
         
@@ -1303,7 +1341,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint64 time = 5;</code>
+       * <code>uint64 time = 5;</code>
        */
       public Builder clearTime() {
         
@@ -1314,13 +1352,13 @@ public final class KeyValue {
 
       private int hinteddHandoff_ ;
       /**
-       * <code>optional uint32 hinteddHandoff = 6;</code>
+       * <code>uint32 hinteddHandoff = 6;</code>
        */
       public int getHinteddHandoff() {
         return hinteddHandoff_;
       }
       /**
-       * <code>optional uint32 hinteddHandoff = 6;</code>
+       * <code>uint32 hinteddHandoff = 6;</code>
        */
       public Builder setHinteddHandoff(int value) {
         
@@ -1329,7 +1367,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 hinteddHandoff = 6;</code>
+       * <code>uint32 hinteddHandoff = 6;</code>
        */
       public Builder clearHinteddHandoff() {
         
@@ -1339,12 +1377,12 @@ public final class KeyValue {
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.mergeUnknownFields(unknownFields);
       }
 
 
@@ -1391,12 +1429,12 @@ public final class KeyValue {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>uint32 id = 1;</code>
      */
     int getId();
 
     /**
-     * <code>optional bool writeReply = 2;</code>
+     * <code>bool writeReply = 2;</code>
      */
     boolean getWriteReply();
   }
@@ -1407,6 +1445,7 @@ public final class KeyValue {
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:WriteResponse)
       WriteResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use WriteResponse.newBuilder() to construct.
     private WriteResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -1419,7 +1458,7 @@ public final class KeyValue {
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+      return this.unknownFields;
     }
     private WriteResponse(
         com.google.protobuf.CodedInputStream input,
@@ -1427,6 +1466,8 @@ public final class KeyValue {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -1436,7 +1477,8 @@ public final class KeyValue {
               done = true;
               break;
             default: {
-              if (!input.skipField(tag)) {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -1459,6 +1501,7 @@ public final class KeyValue {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
@@ -1477,7 +1520,7 @@ public final class KeyValue {
     public static final int ID_FIELD_NUMBER = 1;
     private int id_;
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>uint32 id = 1;</code>
      */
     public int getId() {
       return id_;
@@ -1486,7 +1529,7 @@ public final class KeyValue {
     public static final int WRITEREPLY_FIELD_NUMBER = 2;
     private boolean writeReply_;
     /**
-     * <code>optional bool writeReply = 2;</code>
+     * <code>bool writeReply = 2;</code>
      */
     public boolean getWriteReply() {
       return writeReply_;
@@ -1510,6 +1553,7 @@ public final class KeyValue {
       if (writeReply_ != false) {
         output.writeBool(2, writeReply_);
       }
+      unknownFields.writeTo(output);
     }
 
     public int getSerializedSize() {
@@ -1525,11 +1569,11 @@ public final class KeyValue {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(2, writeReply_);
       }
+      size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
@@ -1545,6 +1589,7 @@ public final class KeyValue {
           == other.getId());
       result = result && (getWriteReply()
           == other.getWriteReply());
+      result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
 
@@ -1554,7 +1599,7 @@ public final class KeyValue {
         return memoizedHashCode;
       }
       int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ID_FIELD_NUMBER;
       hash = (53 * hash) + getId();
       hash = (37 * hash) + WRITEREPLY_FIELD_NUMBER;
@@ -1565,6 +1610,17 @@ public final class KeyValue {
       return hash;
     }
 
+    public static KeyValue.WriteResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static KeyValue.WriteResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static KeyValue.WriteResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1715,7 +1771,7 @@ public final class KeyValue {
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
       public Builder clearField(
@@ -1728,12 +1784,12 @@ public final class KeyValue {
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -1753,6 +1809,7 @@ public final class KeyValue {
         if (other.getWriteReply() != false) {
           setWriteReply(other.getWriteReply());
         }
+        this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
       }
@@ -1781,13 +1838,13 @@ public final class KeyValue {
 
       private int id_ ;
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>uint32 id = 1;</code>
        */
       public int getId() {
         return id_;
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>uint32 id = 1;</code>
        */
       public Builder setId(int value) {
         
@@ -1796,7 +1853,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>uint32 id = 1;</code>
        */
       public Builder clearId() {
         
@@ -1807,13 +1864,13 @@ public final class KeyValue {
 
       private boolean writeReply_ ;
       /**
-       * <code>optional bool writeReply = 2;</code>
+       * <code>bool writeReply = 2;</code>
        */
       public boolean getWriteReply() {
         return writeReply_;
       }
       /**
-       * <code>optional bool writeReply = 2;</code>
+       * <code>bool writeReply = 2;</code>
        */
       public Builder setWriteReply(boolean value) {
         
@@ -1822,7 +1879,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional bool writeReply = 2;</code>
+       * <code>bool writeReply = 2;</code>
        */
       public Builder clearWriteReply() {
         
@@ -1832,12 +1889,12 @@ public final class KeyValue {
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.mergeUnknownFields(unknownFields);
       }
 
 
@@ -1884,17 +1941,17 @@ public final class KeyValue {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     java.lang.String getKey();
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     com.google.protobuf.ByteString
         getKeyBytes();
 
     /**
-     * <code>optional uint64 time = 2;</code>
+     * <code>uint64 time = 2;</code>
      */
     long getTime();
   }
@@ -1905,6 +1962,7 @@ public final class KeyValue {
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:ReturnValue)
       ReturnValueOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use ReturnValue.newBuilder() to construct.
     private ReturnValue(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -1917,7 +1975,7 @@ public final class KeyValue {
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+      return this.unknownFields;
     }
     private ReturnValue(
         com.google.protobuf.CodedInputStream input,
@@ -1925,6 +1983,8 @@ public final class KeyValue {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -1934,7 +1994,8 @@ public final class KeyValue {
               done = true;
               break;
             default: {
-              if (!input.skipField(tag)) {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -1958,6 +2019,7 @@ public final class KeyValue {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
@@ -1976,7 +2038,7 @@ public final class KeyValue {
     public static final int KEY_FIELD_NUMBER = 1;
     private volatile java.lang.Object key_;
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     public java.lang.String getKey() {
       java.lang.Object ref = key_;
@@ -1991,7 +2053,7 @@ public final class KeyValue {
       }
     }
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     public com.google.protobuf.ByteString
         getKeyBytes() {
@@ -2010,7 +2072,7 @@ public final class KeyValue {
     public static final int TIME_FIELD_NUMBER = 2;
     private long time_;
     /**
-     * <code>optional uint64 time = 2;</code>
+     * <code>uint64 time = 2;</code>
      */
     public long getTime() {
       return time_;
@@ -2034,6 +2096,7 @@ public final class KeyValue {
       if (time_ != 0L) {
         output.writeUInt64(2, time_);
       }
+      unknownFields.writeTo(output);
     }
 
     public int getSerializedSize() {
@@ -2048,11 +2111,11 @@ public final class KeyValue {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(2, time_);
       }
+      size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
@@ -2068,6 +2131,7 @@ public final class KeyValue {
           .equals(other.getKey());
       result = result && (getTime()
           == other.getTime());
+      result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
 
@@ -2077,7 +2141,7 @@ public final class KeyValue {
         return memoizedHashCode;
       }
       int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KEY_FIELD_NUMBER;
       hash = (53 * hash) + getKey().hashCode();
       hash = (37 * hash) + TIME_FIELD_NUMBER;
@@ -2088,6 +2152,17 @@ public final class KeyValue {
       return hash;
     }
 
+    public static KeyValue.ReturnValue parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static KeyValue.ReturnValue parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static KeyValue.ReturnValue parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2238,7 +2313,7 @@ public final class KeyValue {
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
       public Builder clearField(
@@ -2251,12 +2326,12 @@ public final class KeyValue {
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -2277,6 +2352,7 @@ public final class KeyValue {
         if (other.getTime() != 0L) {
           setTime(other.getTime());
         }
+        this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
       }
@@ -2305,7 +2381,7 @@ public final class KeyValue {
 
       private java.lang.Object key_ = "";
       /**
-       * <code>optional string key = 1;</code>
+       * <code>string key = 1;</code>
        */
       public java.lang.String getKey() {
         java.lang.Object ref = key_;
@@ -2320,7 +2396,7 @@ public final class KeyValue {
         }
       }
       /**
-       * <code>optional string key = 1;</code>
+       * <code>string key = 1;</code>
        */
       public com.google.protobuf.ByteString
           getKeyBytes() {
@@ -2336,7 +2412,7 @@ public final class KeyValue {
         }
       }
       /**
-       * <code>optional string key = 1;</code>
+       * <code>string key = 1;</code>
        */
       public Builder setKey(
           java.lang.String value) {
@@ -2349,7 +2425,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional string key = 1;</code>
+       * <code>string key = 1;</code>
        */
       public Builder clearKey() {
         
@@ -2358,7 +2434,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional string key = 1;</code>
+       * <code>string key = 1;</code>
        */
       public Builder setKeyBytes(
           com.google.protobuf.ByteString value) {
@@ -2374,13 +2450,13 @@ public final class KeyValue {
 
       private long time_ ;
       /**
-       * <code>optional uint64 time = 2;</code>
+       * <code>uint64 time = 2;</code>
        */
       public long getTime() {
         return time_;
       }
       /**
-       * <code>optional uint64 time = 2;</code>
+       * <code>uint64 time = 2;</code>
        */
       public Builder setTime(long value) {
         
@@ -2389,7 +2465,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>optional uint64 time = 2;</code>
+       * <code>uint64 time = 2;</code>
        */
       public Builder clearTime() {
         
@@ -2399,12 +2475,12 @@ public final class KeyValue {
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.mergeUnknownFields(unknownFields);
       }
 
 
@@ -2451,42 +2527,63 @@ public final class KeyValue {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional .Get get = 1;</code>
+     * <code>.Get get_key = 1;</code>
      */
-    KeyValue.Get getGet();
+    boolean hasGetKey();
     /**
-     * <code>optional .Get get = 1;</code>
+     * <code>.Get get_key = 1;</code>
      */
-    KeyValue.GetOrBuilder getGetOrBuilder();
+    KeyValue.Get getGetKey();
+    /**
+     * <code>.Get get_key = 1;</code>
+     */
+    KeyValue.GetOrBuilder getGetKeyOrBuilder();
 
     /**
-     * <code>optional .Put put = 2;</code>
+     * <code>.Put put_key = 2;</code>
      */
-    KeyValue.Put getPut();
+    boolean hasPutKey();
     /**
-     * <code>optional .Put put = 2;</code>
+     * <code>.Put put_key = 2;</code>
      */
-    KeyValue.PutOrBuilder getPutOrBuilder();
+    KeyValue.Put getPutKey();
+    /**
+     * <code>.Put put_key = 2;</code>
+     */
+    KeyValue.PutOrBuilder getPutKeyOrBuilder();
 
     /**
-     * <code>optional .WriteResponse write_response = 3;</code>
+     * <code>.WriteResponse write_response = 3;</code>
+     */
+    boolean hasWriteResponse();
+    /**
+     * <code>.WriteResponse write_response = 3;</code>
      */
     KeyValue.WriteResponse getWriteResponse();
     /**
-     * <code>optional .WriteResponse write_response = 3;</code>
+     * <code>.WriteResponse write_response = 3;</code>
      */
     KeyValue.WriteResponseOrBuilder getWriteResponseOrBuilder();
 
     /**
-     * <code>optional .ReturnValue return_value = 4;</code>
+     * <code>.ReturnValue return_value = 4;</code>
+     */
+    boolean hasReturnValue();
+    /**
+     * <code>.ReturnValue return_value = 4;</code>
      */
     KeyValue.ReturnValue getReturnValue();
     /**
-     * <code>optional .ReturnValue return_value = 4;</code>
+     * <code>.ReturnValue return_value = 4;</code>
      */
     KeyValue.ReturnValueOrBuilder getReturnValueOrBuilder();
 
-    public KeyValue.KeyValueMessage.KeyValueMessageCase getKeyValueMessageCase();
+    /**
+     * <code>uint32 connection = 5;</code>
+     */
+    int getConnection();
+
+    public KeyValue.KeyValueMessage.KeyvalueMessageCase getKeyvalueMessageCase();
   }
   /**
    * Protobuf type {@code KeyValueMessage}
@@ -2495,17 +2592,19 @@ public final class KeyValue {
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:KeyValueMessage)
       KeyValueMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use KeyValueMessage.newBuilder() to construct.
     private KeyValueMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
     private KeyValueMessage() {
+      connection_ = 0;
     }
 
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+      return this.unknownFields;
     }
     private KeyValueMessage(
         com.google.protobuf.CodedInputStream input,
@@ -2513,6 +2612,8 @@ public final class KeyValue {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -2522,65 +2623,71 @@ public final class KeyValue {
               done = true;
               break;
             default: {
-              if (!input.skipField(tag)) {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
             }
             case 10: {
               KeyValue.Get.Builder subBuilder = null;
-              if (keyValueMessageCase_ == 1) {
-                subBuilder = ((KeyValue.Get) keyValueMessage_).toBuilder();
+              if (keyvalueMessageCase_ == 1) {
+                subBuilder = ((KeyValue.Get) keyvalueMessage_).toBuilder();
               }
-              keyValueMessage_ =
+              keyvalueMessage_ =
                   input.readMessage(KeyValue.Get.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((KeyValue.Get) keyValueMessage_);
-                keyValueMessage_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((KeyValue.Get) keyvalueMessage_);
+                keyvalueMessage_ = subBuilder.buildPartial();
               }
-              keyValueMessageCase_ = 1;
+              keyvalueMessageCase_ = 1;
               break;
             }
             case 18: {
               KeyValue.Put.Builder subBuilder = null;
-              if (keyValueMessageCase_ == 2) {
-                subBuilder = ((KeyValue.Put) keyValueMessage_).toBuilder();
+              if (keyvalueMessageCase_ == 2) {
+                subBuilder = ((KeyValue.Put) keyvalueMessage_).toBuilder();
               }
-              keyValueMessage_ =
+              keyvalueMessage_ =
                   input.readMessage(KeyValue.Put.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((KeyValue.Put) keyValueMessage_);
-                keyValueMessage_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((KeyValue.Put) keyvalueMessage_);
+                keyvalueMessage_ = subBuilder.buildPartial();
               }
-              keyValueMessageCase_ = 2;
+              keyvalueMessageCase_ = 2;
               break;
             }
             case 26: {
               KeyValue.WriteResponse.Builder subBuilder = null;
-              if (keyValueMessageCase_ == 3) {
-                subBuilder = ((KeyValue.WriteResponse) keyValueMessage_).toBuilder();
+              if (keyvalueMessageCase_ == 3) {
+                subBuilder = ((KeyValue.WriteResponse) keyvalueMessage_).toBuilder();
               }
-              keyValueMessage_ =
+              keyvalueMessage_ =
                   input.readMessage(KeyValue.WriteResponse.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((KeyValue.WriteResponse) keyValueMessage_);
-                keyValueMessage_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((KeyValue.WriteResponse) keyvalueMessage_);
+                keyvalueMessage_ = subBuilder.buildPartial();
               }
-              keyValueMessageCase_ = 3;
+              keyvalueMessageCase_ = 3;
               break;
             }
             case 34: {
               KeyValue.ReturnValue.Builder subBuilder = null;
-              if (keyValueMessageCase_ == 4) {
-                subBuilder = ((KeyValue.ReturnValue) keyValueMessage_).toBuilder();
+              if (keyvalueMessageCase_ == 4) {
+                subBuilder = ((KeyValue.ReturnValue) keyvalueMessage_).toBuilder();
               }
-              keyValueMessage_ =
+              keyvalueMessage_ =
                   input.readMessage(KeyValue.ReturnValue.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((KeyValue.ReturnValue) keyValueMessage_);
-                keyValueMessage_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((KeyValue.ReturnValue) keyvalueMessage_);
+                keyvalueMessage_ = subBuilder.buildPartial();
               }
-              keyValueMessageCase_ = 4;
+              keyvalueMessageCase_ = 4;
+              break;
+            }
+            case 40: {
+
+              connection_ = input.readUInt32();
               break;
             }
           }
@@ -2591,6 +2698,7 @@ public final class KeyValue {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
@@ -2606,31 +2714,31 @@ public final class KeyValue {
               KeyValue.KeyValueMessage.class, KeyValue.KeyValueMessage.Builder.class);
     }
 
-    private int keyValueMessageCase_ = 0;
-    private java.lang.Object keyValueMessage_;
-    public enum KeyValueMessageCase
+    private int keyvalueMessageCase_ = 0;
+    private java.lang.Object keyvalueMessage_;
+    public enum KeyvalueMessageCase
         implements com.google.protobuf.Internal.EnumLite {
-      GET(1),
-      PUT(2),
+      GET_KEY(1),
+      PUT_KEY(2),
       WRITE_RESPONSE(3),
       RETURN_VALUE(4),
       KEYVALUEMESSAGE_NOT_SET(0);
       private final int value;
-      private KeyValueMessageCase(int value) {
+      private KeyvalueMessageCase(int value) {
         this.value = value;
       }
       /**
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static KeyValueMessageCase valueOf(int value) {
+      public static KeyvalueMessageCase valueOf(int value) {
         return forNumber(value);
       }
 
-      public static KeyValueMessageCase forNumber(int value) {
+      public static KeyvalueMessageCase forNumber(int value) {
         switch (value) {
-          case 1: return GET;
-          case 2: return PUT;
+          case 1: return GET_KEY;
+          case 2: return PUT_KEY;
           case 3: return WRITE_RESPONSE;
           case 4: return RETURN_VALUE;
           case 0: return KEYVALUEMESSAGE_NOT_SET;
@@ -2642,90 +2750,123 @@ public final class KeyValue {
       }
     };
 
-    public KeyValueMessageCase
-    getKeyValueMessageCase() {
-      return KeyValueMessageCase.forNumber(
-          keyValueMessageCase_);
+    public KeyvalueMessageCase
+    getKeyvalueMessageCase() {
+      return KeyvalueMessageCase.forNumber(
+          keyvalueMessageCase_);
     }
 
-    public static final int GET_FIELD_NUMBER = 1;
+    public static final int GET_KEY_FIELD_NUMBER = 1;
     /**
-     * <code>optional .Get get = 1;</code>
+     * <code>.Get get_key = 1;</code>
      */
-    public KeyValue.Get getGet() {
-      if (keyValueMessageCase_ == 1) {
-         return (KeyValue.Get) keyValueMessage_;
+    public boolean hasGetKey() {
+      return keyvalueMessageCase_ == 1;
+    }
+    /**
+     * <code>.Get get_key = 1;</code>
+     */
+    public KeyValue.Get getGetKey() {
+      if (keyvalueMessageCase_ == 1) {
+         return (KeyValue.Get) keyvalueMessage_;
       }
       return KeyValue.Get.getDefaultInstance();
     }
     /**
-     * <code>optional .Get get = 1;</code>
+     * <code>.Get get_key = 1;</code>
      */
-    public KeyValue.GetOrBuilder getGetOrBuilder() {
-      if (keyValueMessageCase_ == 1) {
-         return (KeyValue.Get) keyValueMessage_;
+    public KeyValue.GetOrBuilder getGetKeyOrBuilder() {
+      if (keyvalueMessageCase_ == 1) {
+         return (KeyValue.Get) keyvalueMessage_;
       }
       return KeyValue.Get.getDefaultInstance();
     }
 
-    public static final int PUT_FIELD_NUMBER = 2;
+    public static final int PUT_KEY_FIELD_NUMBER = 2;
     /**
-     * <code>optional .Put put = 2;</code>
+     * <code>.Put put_key = 2;</code>
      */
-    public KeyValue.Put getPut() {
-      if (keyValueMessageCase_ == 2) {
-         return (KeyValue.Put) keyValueMessage_;
+    public boolean hasPutKey() {
+      return keyvalueMessageCase_ == 2;
+    }
+    /**
+     * <code>.Put put_key = 2;</code>
+     */
+    public KeyValue.Put getPutKey() {
+      if (keyvalueMessageCase_ == 2) {
+         return (KeyValue.Put) keyvalueMessage_;
       }
       return KeyValue.Put.getDefaultInstance();
     }
     /**
-     * <code>optional .Put put = 2;</code>
+     * <code>.Put put_key = 2;</code>
      */
-    public KeyValue.PutOrBuilder getPutOrBuilder() {
-      if (keyValueMessageCase_ == 2) {
-         return (KeyValue.Put) keyValueMessage_;
+    public KeyValue.PutOrBuilder getPutKeyOrBuilder() {
+      if (keyvalueMessageCase_ == 2) {
+         return (KeyValue.Put) keyvalueMessage_;
       }
       return KeyValue.Put.getDefaultInstance();
     }
 
     public static final int WRITE_RESPONSE_FIELD_NUMBER = 3;
     /**
-     * <code>optional .WriteResponse write_response = 3;</code>
+     * <code>.WriteResponse write_response = 3;</code>
+     */
+    public boolean hasWriteResponse() {
+      return keyvalueMessageCase_ == 3;
+    }
+    /**
+     * <code>.WriteResponse write_response = 3;</code>
      */
     public KeyValue.WriteResponse getWriteResponse() {
-      if (keyValueMessageCase_ == 3) {
-         return (KeyValue.WriteResponse) keyValueMessage_;
+      if (keyvalueMessageCase_ == 3) {
+         return (KeyValue.WriteResponse) keyvalueMessage_;
       }
       return KeyValue.WriteResponse.getDefaultInstance();
     }
     /**
-     * <code>optional .WriteResponse write_response = 3;</code>
+     * <code>.WriteResponse write_response = 3;</code>
      */
     public KeyValue.WriteResponseOrBuilder getWriteResponseOrBuilder() {
-      if (keyValueMessageCase_ == 3) {
-         return (KeyValue.WriteResponse) keyValueMessage_;
+      if (keyvalueMessageCase_ == 3) {
+         return (KeyValue.WriteResponse) keyvalueMessage_;
       }
       return KeyValue.WriteResponse.getDefaultInstance();
     }
 
     public static final int RETURN_VALUE_FIELD_NUMBER = 4;
     /**
-     * <code>optional .ReturnValue return_value = 4;</code>
+     * <code>.ReturnValue return_value = 4;</code>
+     */
+    public boolean hasReturnValue() {
+      return keyvalueMessageCase_ == 4;
+    }
+    /**
+     * <code>.ReturnValue return_value = 4;</code>
      */
     public KeyValue.ReturnValue getReturnValue() {
-      if (keyValueMessageCase_ == 4) {
-         return (KeyValue.ReturnValue) keyValueMessage_;
+      if (keyvalueMessageCase_ == 4) {
+         return (KeyValue.ReturnValue) keyvalueMessage_;
       }
       return KeyValue.ReturnValue.getDefaultInstance();
     }
     /**
-     * <code>optional .ReturnValue return_value = 4;</code>
+     * <code>.ReturnValue return_value = 4;</code>
      */
     public KeyValue.ReturnValueOrBuilder getReturnValueOrBuilder() {
-      if (keyValueMessageCase_ == 4) {
-         return (KeyValue.ReturnValue) keyValueMessage_;
+      if (keyvalueMessageCase_ == 4) {
+         return (KeyValue.ReturnValue) keyvalueMessage_;
       }
       return KeyValue.ReturnValue.getDefaultInstance();
+    }
+
+    public static final int CONNECTION_FIELD_NUMBER = 5;
+    private int connection_;
+    /**
+     * <code>uint32 connection = 5;</code>
+     */
+    public int getConnection() {
+      return connection_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2740,18 +2881,22 @@ public final class KeyValue {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (keyValueMessageCase_ == 1) {
-        output.writeMessage(1, (KeyValue.Get) keyValueMessage_);
+      if (keyvalueMessageCase_ == 1) {
+        output.writeMessage(1, (KeyValue.Get) keyvalueMessage_);
       }
-      if (keyValueMessageCase_ == 2) {
-        output.writeMessage(2, (KeyValue.Put) keyValueMessage_);
+      if (keyvalueMessageCase_ == 2) {
+        output.writeMessage(2, (KeyValue.Put) keyvalueMessage_);
       }
-      if (keyValueMessageCase_ == 3) {
-        output.writeMessage(3, (KeyValue.WriteResponse) keyValueMessage_);
+      if (keyvalueMessageCase_ == 3) {
+        output.writeMessage(3, (KeyValue.WriteResponse) keyvalueMessage_);
       }
-      if (keyValueMessageCase_ == 4) {
-        output.writeMessage(4, (KeyValue.ReturnValue) keyValueMessage_);
+      if (keyvalueMessageCase_ == 4) {
+        output.writeMessage(4, (KeyValue.ReturnValue) keyvalueMessage_);
       }
+      if (connection_ != 0) {
+        output.writeUInt32(5, connection_);
+      }
+      unknownFields.writeTo(output);
     }
 
     public int getSerializedSize() {
@@ -2759,27 +2904,31 @@ public final class KeyValue {
       if (size != -1) return size;
 
       size = 0;
-      if (keyValueMessageCase_ == 1) {
+      if (keyvalueMessageCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, (KeyValue.Get) keyValueMessage_);
+          .computeMessageSize(1, (KeyValue.Get) keyvalueMessage_);
       }
-      if (keyValueMessageCase_ == 2) {
+      if (keyvalueMessageCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (KeyValue.Put) keyValueMessage_);
+          .computeMessageSize(2, (KeyValue.Put) keyvalueMessage_);
       }
-      if (keyValueMessageCase_ == 3) {
+      if (keyvalueMessageCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (KeyValue.WriteResponse) keyValueMessage_);
+          .computeMessageSize(3, (KeyValue.WriteResponse) keyvalueMessage_);
       }
-      if (keyValueMessageCase_ == 4) {
+      if (keyvalueMessageCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (KeyValue.ReturnValue) keyValueMessage_);
+          .computeMessageSize(4, (KeyValue.ReturnValue) keyvalueMessage_);
       }
+      if (connection_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(5, connection_);
+      }
+      size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
@@ -2791,17 +2940,19 @@ public final class KeyValue {
       KeyValue.KeyValueMessage other = (KeyValue.KeyValueMessage) obj;
 
       boolean result = true;
-      result = result && getKeyValueMessageCase().equals(
-          other.getKeyValueMessageCase());
+      result = result && (getConnection()
+          == other.getConnection());
+      result = result && getKeyvalueMessageCase().equals(
+          other.getKeyvalueMessageCase());
       if (!result) return false;
-      switch (keyValueMessageCase_) {
+      switch (keyvalueMessageCase_) {
         case 1:
-          result = result && getGet()
-              .equals(other.getGet());
+          result = result && getGetKey()
+              .equals(other.getGetKey());
           break;
         case 2:
-          result = result && getPut()
-              .equals(other.getPut());
+          result = result && getPutKey()
+              .equals(other.getPutKey());
           break;
         case 3:
           result = result && getWriteResponse()
@@ -2814,6 +2965,7 @@ public final class KeyValue {
         case 0:
         default:
       }
+      result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
 
@@ -2823,15 +2975,17 @@ public final class KeyValue {
         return memoizedHashCode;
       }
       int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      switch (keyValueMessageCase_) {
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + CONNECTION_FIELD_NUMBER;
+      hash = (53 * hash) + getConnection();
+      switch (keyvalueMessageCase_) {
         case 1:
-          hash = (37 * hash) + GET_FIELD_NUMBER;
-          hash = (53 * hash) + getGet().hashCode();
+          hash = (37 * hash) + GET_KEY_FIELD_NUMBER;
+          hash = (53 * hash) + getGetKey().hashCode();
           break;
         case 2:
-          hash = (37 * hash) + PUT_FIELD_NUMBER;
-          hash = (53 * hash) + getPut().hashCode();
+          hash = (37 * hash) + PUT_KEY_FIELD_NUMBER;
+          hash = (53 * hash) + getPutKey().hashCode();
           break;
         case 3:
           hash = (37 * hash) + WRITE_RESPONSE_FIELD_NUMBER;
@@ -2849,6 +3003,17 @@ public final class KeyValue {
       return hash;
     }
 
+    public static KeyValue.KeyValueMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static KeyValue.KeyValueMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static KeyValue.KeyValueMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2962,8 +3127,10 @@ public final class KeyValue {
       }
       public Builder clear() {
         super.clear();
-        keyValueMessageCase_ = 0;
-        keyValueMessage_ = null;
+        connection_ = 0;
+
+        keyvalueMessageCase_ = 0;
+        keyvalueMessage_ = null;
         return this;
       }
 
@@ -2986,35 +3153,36 @@ public final class KeyValue {
 
       public KeyValue.KeyValueMessage buildPartial() {
         KeyValue.KeyValueMessage result = new KeyValue.KeyValueMessage(this);
-        if (keyValueMessageCase_ == 1) {
-          if (getBuilder_ == null) {
-            result.keyValueMessage_ = keyValueMessage_;
+        if (keyvalueMessageCase_ == 1) {
+          if (getKeyBuilder_ == null) {
+            result.keyvalueMessage_ = keyvalueMessage_;
           } else {
-            result.keyValueMessage_ = getBuilder_.build();
+            result.keyvalueMessage_ = getKeyBuilder_.build();
           }
         }
-        if (keyValueMessageCase_ == 2) {
-          if (putBuilder_ == null) {
-            result.keyValueMessage_ = keyValueMessage_;
+        if (keyvalueMessageCase_ == 2) {
+          if (putKeyBuilder_ == null) {
+            result.keyvalueMessage_ = keyvalueMessage_;
           } else {
-            result.keyValueMessage_ = putBuilder_.build();
+            result.keyvalueMessage_ = putKeyBuilder_.build();
           }
         }
-        if (keyValueMessageCase_ == 3) {
+        if (keyvalueMessageCase_ == 3) {
           if (writeResponseBuilder_ == null) {
-            result.keyValueMessage_ = keyValueMessage_;
+            result.keyvalueMessage_ = keyvalueMessage_;
           } else {
-            result.keyValueMessage_ = writeResponseBuilder_.build();
+            result.keyvalueMessage_ = writeResponseBuilder_.build();
           }
         }
-        if (keyValueMessageCase_ == 4) {
+        if (keyvalueMessageCase_ == 4) {
           if (returnValueBuilder_ == null) {
-            result.keyValueMessage_ = keyValueMessage_;
+            result.keyvalueMessage_ = keyvalueMessage_;
           } else {
-            result.keyValueMessage_ = returnValueBuilder_.build();
+            result.keyvalueMessage_ = returnValueBuilder_.build();
           }
         }
-        result.keyValueMessageCase_ = keyValueMessageCase_;
+        result.connection_ = connection_;
+        result.keyvalueMessageCase_ = keyvalueMessageCase_;
         onBuilt();
         return result;
       }
@@ -3024,7 +3192,7 @@ public final class KeyValue {
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
       public Builder clearField(
@@ -3037,12 +3205,12 @@ public final class KeyValue {
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -3056,13 +3224,16 @@ public final class KeyValue {
 
       public Builder mergeFrom(KeyValue.KeyValueMessage other) {
         if (other == KeyValue.KeyValueMessage.getDefaultInstance()) return this;
-        switch (other.getKeyValueMessageCase()) {
-          case GET: {
-            mergeGet(other.getGet());
+        if (other.getConnection() != 0) {
+          setConnection(other.getConnection());
+        }
+        switch (other.getKeyvalueMessageCase()) {
+          case GET_KEY: {
+            mergeGetKey(other.getGetKey());
             break;
           }
-          case PUT: {
-            mergePut(other.getPut());
+          case PUT_KEY: {
+            mergePutKey(other.getPutKey());
             break;
           }
           case WRITE_RESPONSE: {
@@ -3077,6 +3248,7 @@ public final class KeyValue {
             break;
           }
         }
+        this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
       }
@@ -3102,408 +3274,426 @@ public final class KeyValue {
         }
         return this;
       }
-      private int keyValueMessageCase_ = 0;
-      private java.lang.Object keyValueMessage_;
-      public KeyValueMessageCase
-          getKeyValueMessageCase() {
-        return KeyValueMessageCase.forNumber(
-            keyValueMessageCase_);
+      private int keyvalueMessageCase_ = 0;
+      private java.lang.Object keyvalueMessage_;
+      public KeyvalueMessageCase
+          getKeyvalueMessageCase() {
+        return KeyvalueMessageCase.forNumber(
+            keyvalueMessageCase_);
       }
 
-      public Builder clearKeyValueMessage() {
-        keyValueMessageCase_ = 0;
-        keyValueMessage_ = null;
+      public Builder clearKeyvalueMessage() {
+        keyvalueMessageCase_ = 0;
+        keyvalueMessage_ = null;
         onChanged();
         return this;
       }
 
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          KeyValue.Get, KeyValue.Get.Builder, KeyValue.GetOrBuilder> getBuilder_;
+          KeyValue.Get, KeyValue.Get.Builder, KeyValue.GetOrBuilder> getKeyBuilder_;
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
-      public KeyValue.Get getGet() {
-        if (getBuilder_ == null) {
-          if (keyValueMessageCase_ == 1) {
-            return (KeyValue.Get) keyValueMessage_;
+      public boolean hasGetKey() {
+        return keyvalueMessageCase_ == 1;
+      }
+      /**
+       * <code>.Get get_key = 1;</code>
+       */
+      public KeyValue.Get getGetKey() {
+        if (getKeyBuilder_ == null) {
+          if (keyvalueMessageCase_ == 1) {
+            return (KeyValue.Get) keyvalueMessage_;
           }
           return KeyValue.Get.getDefaultInstance();
         } else {
-          if (keyValueMessageCase_ == 1) {
-            return getBuilder_.getMessage();
+          if (keyvalueMessageCase_ == 1) {
+            return getKeyBuilder_.getMessage();
           }
           return KeyValue.Get.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
-      public Builder setGet(KeyValue.Get value) {
-        if (getBuilder_ == null) {
+      public Builder setGetKey(KeyValue.Get value) {
+        if (getKeyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          keyValueMessage_ = value;
+          keyvalueMessage_ = value;
           onChanged();
         } else {
-          getBuilder_.setMessage(value);
+          getKeyBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 1;
+        keyvalueMessageCase_ = 1;
         return this;
       }
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
-      public Builder setGet(
+      public Builder setGetKey(
           KeyValue.Get.Builder builderForValue) {
-        if (getBuilder_ == null) {
-          keyValueMessage_ = builderForValue.build();
+        if (getKeyBuilder_ == null) {
+          keyvalueMessage_ = builderForValue.build();
           onChanged();
         } else {
-          getBuilder_.setMessage(builderForValue.build());
+          getKeyBuilder_.setMessage(builderForValue.build());
         }
-        keyValueMessageCase_ = 1;
+        keyvalueMessageCase_ = 1;
         return this;
       }
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
-      public Builder mergeGet(KeyValue.Get value) {
-        if (getBuilder_ == null) {
-          if (keyValueMessageCase_ == 1 &&
-              keyValueMessage_ != KeyValue.Get.getDefaultInstance()) {
-            keyValueMessage_ = KeyValue.Get.newBuilder((KeyValue.Get) keyValueMessage_)
+      public Builder mergeGetKey(KeyValue.Get value) {
+        if (getKeyBuilder_ == null) {
+          if (keyvalueMessageCase_ == 1 &&
+              keyvalueMessage_ != KeyValue.Get.getDefaultInstance()) {
+            keyvalueMessage_ = KeyValue.Get.newBuilder((KeyValue.Get) keyvalueMessage_)
                 .mergeFrom(value).buildPartial();
           } else {
-            keyValueMessage_ = value;
+            keyvalueMessage_ = value;
           }
           onChanged();
         } else {
-          if (keyValueMessageCase_ == 1) {
-            getBuilder_.mergeFrom(value);
+          if (keyvalueMessageCase_ == 1) {
+            getKeyBuilder_.mergeFrom(value);
           }
-          getBuilder_.setMessage(value);
+          getKeyBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 1;
+        keyvalueMessageCase_ = 1;
         return this;
       }
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
-      public Builder clearGet() {
-        if (getBuilder_ == null) {
-          if (keyValueMessageCase_ == 1) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+      public Builder clearGetKey() {
+        if (getKeyBuilder_ == null) {
+          if (keyvalueMessageCase_ == 1) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
             onChanged();
           }
         } else {
-          if (keyValueMessageCase_ == 1) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+          if (keyvalueMessageCase_ == 1) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
           }
-          getBuilder_.clear();
+          getKeyBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
-      public KeyValue.Get.Builder getGetBuilder() {
-        return getGetFieldBuilder().getBuilder();
+      public KeyValue.Get.Builder getGetKeyBuilder() {
+        return getGetKeyFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
-      public KeyValue.GetOrBuilder getGetOrBuilder() {
-        if ((keyValueMessageCase_ == 1) && (getBuilder_ != null)) {
-          return getBuilder_.getMessageOrBuilder();
+      public KeyValue.GetOrBuilder getGetKeyOrBuilder() {
+        if ((keyvalueMessageCase_ == 1) && (getKeyBuilder_ != null)) {
+          return getKeyBuilder_.getMessageOrBuilder();
         } else {
-          if (keyValueMessageCase_ == 1) {
-            return (KeyValue.Get) keyValueMessage_;
+          if (keyvalueMessageCase_ == 1) {
+            return (KeyValue.Get) keyvalueMessage_;
           }
           return KeyValue.Get.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .Get get = 1;</code>
+       * <code>.Get get_key = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           KeyValue.Get, KeyValue.Get.Builder, KeyValue.GetOrBuilder> 
-          getGetFieldBuilder() {
-        if (getBuilder_ == null) {
-          if (!(keyValueMessageCase_ == 1)) {
-            keyValueMessage_ = KeyValue.Get.getDefaultInstance();
+          getGetKeyFieldBuilder() {
+        if (getKeyBuilder_ == null) {
+          if (!(keyvalueMessageCase_ == 1)) {
+            keyvalueMessage_ = KeyValue.Get.getDefaultInstance();
           }
-          getBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          getKeyBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               KeyValue.Get, KeyValue.Get.Builder, KeyValue.GetOrBuilder>(
-                  (KeyValue.Get) keyValueMessage_,
+                  (KeyValue.Get) keyvalueMessage_,
                   getParentForChildren(),
                   isClean());
-          keyValueMessage_ = null;
+          keyvalueMessage_ = null;
         }
-        keyValueMessageCase_ = 1;
+        keyvalueMessageCase_ = 1;
         onChanged();;
-        return getBuilder_;
+        return getKeyBuilder_;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          KeyValue.Put, KeyValue.Put.Builder, KeyValue.PutOrBuilder> putBuilder_;
+          KeyValue.Put, KeyValue.Put.Builder, KeyValue.PutOrBuilder> putKeyBuilder_;
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
-      public KeyValue.Put getPut() {
-        if (putBuilder_ == null) {
-          if (keyValueMessageCase_ == 2) {
-            return (KeyValue.Put) keyValueMessage_;
+      public boolean hasPutKey() {
+        return keyvalueMessageCase_ == 2;
+      }
+      /**
+       * <code>.Put put_key = 2;</code>
+       */
+      public KeyValue.Put getPutKey() {
+        if (putKeyBuilder_ == null) {
+          if (keyvalueMessageCase_ == 2) {
+            return (KeyValue.Put) keyvalueMessage_;
           }
           return KeyValue.Put.getDefaultInstance();
         } else {
-          if (keyValueMessageCase_ == 2) {
-            return putBuilder_.getMessage();
+          if (keyvalueMessageCase_ == 2) {
+            return putKeyBuilder_.getMessage();
           }
           return KeyValue.Put.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
-      public Builder setPut(KeyValue.Put value) {
-        if (putBuilder_ == null) {
+      public Builder setPutKey(KeyValue.Put value) {
+        if (putKeyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          keyValueMessage_ = value;
+          keyvalueMessage_ = value;
           onChanged();
         } else {
-          putBuilder_.setMessage(value);
+          putKeyBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 2;
+        keyvalueMessageCase_ = 2;
         return this;
       }
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
-      public Builder setPut(
+      public Builder setPutKey(
           KeyValue.Put.Builder builderForValue) {
-        if (putBuilder_ == null) {
-          keyValueMessage_ = builderForValue.build();
+        if (putKeyBuilder_ == null) {
+          keyvalueMessage_ = builderForValue.build();
           onChanged();
         } else {
-          putBuilder_.setMessage(builderForValue.build());
+          putKeyBuilder_.setMessage(builderForValue.build());
         }
-        keyValueMessageCase_ = 2;
+        keyvalueMessageCase_ = 2;
         return this;
       }
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
-      public Builder mergePut(KeyValue.Put value) {
-        if (putBuilder_ == null) {
-          if (keyValueMessageCase_ == 2 &&
-              keyValueMessage_ != KeyValue.Put.getDefaultInstance()) {
-            keyValueMessage_ = KeyValue.Put.newBuilder((KeyValue.Put) keyValueMessage_)
+      public Builder mergePutKey(KeyValue.Put value) {
+        if (putKeyBuilder_ == null) {
+          if (keyvalueMessageCase_ == 2 &&
+              keyvalueMessage_ != KeyValue.Put.getDefaultInstance()) {
+            keyvalueMessage_ = KeyValue.Put.newBuilder((KeyValue.Put) keyvalueMessage_)
                 .mergeFrom(value).buildPartial();
           } else {
-            keyValueMessage_ = value;
+            keyvalueMessage_ = value;
           }
           onChanged();
         } else {
-          if (keyValueMessageCase_ == 2) {
-            putBuilder_.mergeFrom(value);
+          if (keyvalueMessageCase_ == 2) {
+            putKeyBuilder_.mergeFrom(value);
           }
-          putBuilder_.setMessage(value);
+          putKeyBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 2;
+        keyvalueMessageCase_ = 2;
         return this;
       }
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
-      public Builder clearPut() {
-        if (putBuilder_ == null) {
-          if (keyValueMessageCase_ == 2) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+      public Builder clearPutKey() {
+        if (putKeyBuilder_ == null) {
+          if (keyvalueMessageCase_ == 2) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
             onChanged();
           }
         } else {
-          if (keyValueMessageCase_ == 2) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+          if (keyvalueMessageCase_ == 2) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
           }
-          putBuilder_.clear();
+          putKeyBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
-      public KeyValue.Put.Builder getPutBuilder() {
-        return getPutFieldBuilder().getBuilder();
+      public KeyValue.Put.Builder getPutKeyBuilder() {
+        return getPutKeyFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
-      public KeyValue.PutOrBuilder getPutOrBuilder() {
-        if ((keyValueMessageCase_ == 2) && (putBuilder_ != null)) {
-          return putBuilder_.getMessageOrBuilder();
+      public KeyValue.PutOrBuilder getPutKeyOrBuilder() {
+        if ((keyvalueMessageCase_ == 2) && (putKeyBuilder_ != null)) {
+          return putKeyBuilder_.getMessageOrBuilder();
         } else {
-          if (keyValueMessageCase_ == 2) {
-            return (KeyValue.Put) keyValueMessage_;
+          if (keyvalueMessageCase_ == 2) {
+            return (KeyValue.Put) keyvalueMessage_;
           }
           return KeyValue.Put.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .Put put = 2;</code>
+       * <code>.Put put_key = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           KeyValue.Put, KeyValue.Put.Builder, KeyValue.PutOrBuilder> 
-          getPutFieldBuilder() {
-        if (putBuilder_ == null) {
-          if (!(keyValueMessageCase_ == 2)) {
-            keyValueMessage_ = KeyValue.Put.getDefaultInstance();
+          getPutKeyFieldBuilder() {
+        if (putKeyBuilder_ == null) {
+          if (!(keyvalueMessageCase_ == 2)) {
+            keyvalueMessage_ = KeyValue.Put.getDefaultInstance();
           }
-          putBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          putKeyBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               KeyValue.Put, KeyValue.Put.Builder, KeyValue.PutOrBuilder>(
-                  (KeyValue.Put) keyValueMessage_,
+                  (KeyValue.Put) keyvalueMessage_,
                   getParentForChildren(),
                   isClean());
-          keyValueMessage_ = null;
+          keyvalueMessage_ = null;
         }
-        keyValueMessageCase_ = 2;
+        keyvalueMessageCase_ = 2;
         onChanged();;
-        return putBuilder_;
+        return putKeyBuilder_;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
           KeyValue.WriteResponse, KeyValue.WriteResponse.Builder, KeyValue.WriteResponseOrBuilder> writeResponseBuilder_;
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
+       */
+      public boolean hasWriteResponse() {
+        return keyvalueMessageCase_ == 3;
+      }
+      /**
+       * <code>.WriteResponse write_response = 3;</code>
        */
       public KeyValue.WriteResponse getWriteResponse() {
         if (writeResponseBuilder_ == null) {
-          if (keyValueMessageCase_ == 3) {
-            return (KeyValue.WriteResponse) keyValueMessage_;
+          if (keyvalueMessageCase_ == 3) {
+            return (KeyValue.WriteResponse) keyvalueMessage_;
           }
           return KeyValue.WriteResponse.getDefaultInstance();
         } else {
-          if (keyValueMessageCase_ == 3) {
+          if (keyvalueMessageCase_ == 3) {
             return writeResponseBuilder_.getMessage();
           }
           return KeyValue.WriteResponse.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
        */
       public Builder setWriteResponse(KeyValue.WriteResponse value) {
         if (writeResponseBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          keyValueMessage_ = value;
+          keyvalueMessage_ = value;
           onChanged();
         } else {
           writeResponseBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 3;
+        keyvalueMessageCase_ = 3;
         return this;
       }
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
        */
       public Builder setWriteResponse(
           KeyValue.WriteResponse.Builder builderForValue) {
         if (writeResponseBuilder_ == null) {
-          keyValueMessage_ = builderForValue.build();
+          keyvalueMessage_ = builderForValue.build();
           onChanged();
         } else {
           writeResponseBuilder_.setMessage(builderForValue.build());
         }
-        keyValueMessageCase_ = 3;
+        keyvalueMessageCase_ = 3;
         return this;
       }
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
        */
       public Builder mergeWriteResponse(KeyValue.WriteResponse value) {
         if (writeResponseBuilder_ == null) {
-          if (keyValueMessageCase_ == 3 &&
-              keyValueMessage_ != KeyValue.WriteResponse.getDefaultInstance()) {
-            keyValueMessage_ = KeyValue.WriteResponse.newBuilder((KeyValue.WriteResponse) keyValueMessage_)
+          if (keyvalueMessageCase_ == 3 &&
+              keyvalueMessage_ != KeyValue.WriteResponse.getDefaultInstance()) {
+            keyvalueMessage_ = KeyValue.WriteResponse.newBuilder((KeyValue.WriteResponse) keyvalueMessage_)
                 .mergeFrom(value).buildPartial();
           } else {
-            keyValueMessage_ = value;
+            keyvalueMessage_ = value;
           }
           onChanged();
         } else {
-          if (keyValueMessageCase_ == 3) {
+          if (keyvalueMessageCase_ == 3) {
             writeResponseBuilder_.mergeFrom(value);
           }
           writeResponseBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 3;
+        keyvalueMessageCase_ = 3;
         return this;
       }
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
        */
       public Builder clearWriteResponse() {
         if (writeResponseBuilder_ == null) {
-          if (keyValueMessageCase_ == 3) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+          if (keyvalueMessageCase_ == 3) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
             onChanged();
           }
         } else {
-          if (keyValueMessageCase_ == 3) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+          if (keyvalueMessageCase_ == 3) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
           }
           writeResponseBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
        */
       public KeyValue.WriteResponse.Builder getWriteResponseBuilder() {
         return getWriteResponseFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
        */
       public KeyValue.WriteResponseOrBuilder getWriteResponseOrBuilder() {
-        if ((keyValueMessageCase_ == 3) && (writeResponseBuilder_ != null)) {
+        if ((keyvalueMessageCase_ == 3) && (writeResponseBuilder_ != null)) {
           return writeResponseBuilder_.getMessageOrBuilder();
         } else {
-          if (keyValueMessageCase_ == 3) {
-            return (KeyValue.WriteResponse) keyValueMessage_;
+          if (keyvalueMessageCase_ == 3) {
+            return (KeyValue.WriteResponse) keyvalueMessage_;
           }
           return KeyValue.WriteResponse.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .WriteResponse write_response = 3;</code>
+       * <code>.WriteResponse write_response = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           KeyValue.WriteResponse, KeyValue.WriteResponse.Builder, KeyValue.WriteResponseOrBuilder> 
           getWriteResponseFieldBuilder() {
         if (writeResponseBuilder_ == null) {
-          if (!(keyValueMessageCase_ == 3)) {
-            keyValueMessage_ = KeyValue.WriteResponse.getDefaultInstance();
+          if (!(keyvalueMessageCase_ == 3)) {
+            keyvalueMessage_ = KeyValue.WriteResponse.getDefaultInstance();
           }
           writeResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               KeyValue.WriteResponse, KeyValue.WriteResponse.Builder, KeyValue.WriteResponseOrBuilder>(
-                  (KeyValue.WriteResponse) keyValueMessage_,
+                  (KeyValue.WriteResponse) keyvalueMessage_,
                   getParentForChildren(),
                   isClean());
-          keyValueMessage_ = null;
+          keyvalueMessage_ = null;
         }
-        keyValueMessageCase_ = 3;
+        keyvalueMessageCase_ = 3;
         onChanged();;
         return writeResponseBuilder_;
       }
@@ -3511,140 +3701,172 @@ public final class KeyValue {
       private com.google.protobuf.SingleFieldBuilderV3<
           KeyValue.ReturnValue, KeyValue.ReturnValue.Builder, KeyValue.ReturnValueOrBuilder> returnValueBuilder_;
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
+       */
+      public boolean hasReturnValue() {
+        return keyvalueMessageCase_ == 4;
+      }
+      /**
+       * <code>.ReturnValue return_value = 4;</code>
        */
       public KeyValue.ReturnValue getReturnValue() {
         if (returnValueBuilder_ == null) {
-          if (keyValueMessageCase_ == 4) {
-            return (KeyValue.ReturnValue) keyValueMessage_;
+          if (keyvalueMessageCase_ == 4) {
+            return (KeyValue.ReturnValue) keyvalueMessage_;
           }
           return KeyValue.ReturnValue.getDefaultInstance();
         } else {
-          if (keyValueMessageCase_ == 4) {
+          if (keyvalueMessageCase_ == 4) {
             return returnValueBuilder_.getMessage();
           }
           return KeyValue.ReturnValue.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
        */
       public Builder setReturnValue(KeyValue.ReturnValue value) {
         if (returnValueBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          keyValueMessage_ = value;
+          keyvalueMessage_ = value;
           onChanged();
         } else {
           returnValueBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 4;
+        keyvalueMessageCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
        */
       public Builder setReturnValue(
           KeyValue.ReturnValue.Builder builderForValue) {
         if (returnValueBuilder_ == null) {
-          keyValueMessage_ = builderForValue.build();
+          keyvalueMessage_ = builderForValue.build();
           onChanged();
         } else {
           returnValueBuilder_.setMessage(builderForValue.build());
         }
-        keyValueMessageCase_ = 4;
+        keyvalueMessageCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
        */
       public Builder mergeReturnValue(KeyValue.ReturnValue value) {
         if (returnValueBuilder_ == null) {
-          if (keyValueMessageCase_ == 4 &&
-              keyValueMessage_ != KeyValue.ReturnValue.getDefaultInstance()) {
-            keyValueMessage_ = KeyValue.ReturnValue.newBuilder((KeyValue.ReturnValue) keyValueMessage_)
+          if (keyvalueMessageCase_ == 4 &&
+              keyvalueMessage_ != KeyValue.ReturnValue.getDefaultInstance()) {
+            keyvalueMessage_ = KeyValue.ReturnValue.newBuilder((KeyValue.ReturnValue) keyvalueMessage_)
                 .mergeFrom(value).buildPartial();
           } else {
-            keyValueMessage_ = value;
+            keyvalueMessage_ = value;
           }
           onChanged();
         } else {
-          if (keyValueMessageCase_ == 4) {
+          if (keyvalueMessageCase_ == 4) {
             returnValueBuilder_.mergeFrom(value);
           }
           returnValueBuilder_.setMessage(value);
         }
-        keyValueMessageCase_ = 4;
+        keyvalueMessageCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
        */
       public Builder clearReturnValue() {
         if (returnValueBuilder_ == null) {
-          if (keyValueMessageCase_ == 4) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+          if (keyvalueMessageCase_ == 4) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
             onChanged();
           }
         } else {
-          if (keyValueMessageCase_ == 4) {
-            keyValueMessageCase_ = 0;
-            keyValueMessage_ = null;
+          if (keyvalueMessageCase_ == 4) {
+            keyvalueMessageCase_ = 0;
+            keyvalueMessage_ = null;
           }
           returnValueBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
        */
       public KeyValue.ReturnValue.Builder getReturnValueBuilder() {
         return getReturnValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
        */
       public KeyValue.ReturnValueOrBuilder getReturnValueOrBuilder() {
-        if ((keyValueMessageCase_ == 4) && (returnValueBuilder_ != null)) {
+        if ((keyvalueMessageCase_ == 4) && (returnValueBuilder_ != null)) {
           return returnValueBuilder_.getMessageOrBuilder();
         } else {
-          if (keyValueMessageCase_ == 4) {
-            return (KeyValue.ReturnValue) keyValueMessage_;
+          if (keyvalueMessageCase_ == 4) {
+            return (KeyValue.ReturnValue) keyvalueMessage_;
           }
           return KeyValue.ReturnValue.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .ReturnValue return_value = 4;</code>
+       * <code>.ReturnValue return_value = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           KeyValue.ReturnValue, KeyValue.ReturnValue.Builder, KeyValue.ReturnValueOrBuilder> 
           getReturnValueFieldBuilder() {
         if (returnValueBuilder_ == null) {
-          if (!(keyValueMessageCase_ == 4)) {
-            keyValueMessage_ = KeyValue.ReturnValue.getDefaultInstance();
+          if (!(keyvalueMessageCase_ == 4)) {
+            keyvalueMessage_ = KeyValue.ReturnValue.getDefaultInstance();
           }
           returnValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               KeyValue.ReturnValue, KeyValue.ReturnValue.Builder, KeyValue.ReturnValueOrBuilder>(
-                  (KeyValue.ReturnValue) keyValueMessage_,
+                  (KeyValue.ReturnValue) keyvalueMessage_,
                   getParentForChildren(),
                   isClean());
-          keyValueMessage_ = null;
+          keyvalueMessage_ = null;
         }
-        keyValueMessageCase_ = 4;
+        keyvalueMessageCase_ = 4;
         onChanged();;
         return returnValueBuilder_;
       }
+
+      private int connection_ ;
+      /**
+       * <code>uint32 connection = 5;</code>
+       */
+      public int getConnection() {
+        return connection_;
+      }
+      /**
+       * <code>uint32 connection = 5;</code>
+       */
+      public Builder setConnection(int value) {
+        
+        connection_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 connection = 5;</code>
+       */
+      public Builder clearConnection() {
+        
+        connection_ = 0;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.mergeUnknownFields(unknownFields);
       }
 
 
@@ -3726,12 +3948,12 @@ public final class KeyValue {
       "istency\030\003 \001(\r\022\n\n\002id\030\004 \001(\r\022\014\n\004time\030\005 \001(\004\022" +
       "\026\n\016hinteddHandoff\030\006 \001(\r\"/\n\rWriteResponse" +
       "\022\n\n\002id\030\001 \001(\r\022\022\n\nwriteReply\030\002 \001(\010\"(\n\013Retu" +
-      "rnValue\022\013\n\003key\030\001 \001(\t\022\014\n\004time\030\002 \001(\004\"\237\001\n\017K" +
-      "eyValueMessage\022\023\n\003get\030\001 \001(\0132\004.GetH\000\022\023\n\003p" +
-      "ut\030\002 \001(\0132\004.PutH\000\022(\n\016write_response\030\003 \001(\013" +
-      "2\016.WriteResponseH\000\022$\n\014return_value\030\004 \001(\013",
-      "2\014.ReturnValueH\000B\022\n\020KeyValue_messageb\006pr" +
-      "oto3"
+      "rnValue\022\013\n\003key\030\001 \001(\t\022\014\n\004time\030\002 \001(\004\"\273\001\n\017K" +
+      "eyValueMessage\022\027\n\007get_key\030\001 \001(\0132\004.GetH\000\022" +
+      "\027\n\007put_key\030\002 \001(\0132\004.PutH\000\022(\n\016write_respon" +
+      "se\030\003 \001(\0132\016.WriteResponseH\000\022$\n\014return_val",
+      "ue\030\004 \001(\0132\014.ReturnValueH\000\022\022\n\nconnection\030\005" +
+      " \001(\rB\022\n\020keyvalue_messageb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3774,7 +3996,7 @@ public final class KeyValue {
     internal_static_KeyValueMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_KeyValueMessage_descriptor,
-        new java.lang.String[] { "Get", "Put", "WriteResponse", "ReturnValue", "KeyValueMessage", });
+        new java.lang.String[] { "GetKey", "PutKey", "WriteResponse", "ReturnValue", "Connection", "KeyvalueMessage", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
