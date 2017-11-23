@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class ReplicaServer{
 	
@@ -32,8 +33,7 @@ public class ReplicaServer{
 				KeyValue.KeyValueMessage incoming = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
 				if(incoming.getConnection() == 1) {
 					System.out.println("Client");
-					sc.handleClient(incoming);
-					Thread cl = new Thread(new Coordinator(request,sc));
+					Thread cl = new Thread(new Coordinator(request,sc, incoming));
 					cl.start();
 				}
 				if(incoming.getConnection() == 0){
@@ -42,6 +42,13 @@ public class ReplicaServer{
 					KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
 					sc.store.put(put.getKey(),temp);
 					sc.printStore();
+					OutputStream out = request.getOutputStream();
+					KeyValue.KeyValueMessage.Builder res = KeyValue.KeyValueMessage.newBuilder();
+					KeyValue.WriteResponse.Builder wr = KeyValue.WriteResponse.newBuilder();
+					wr.setId(put.getKey());
+					wr.setWriteReply(true);
+					res.setWriteResponse(wr.build());
+					res.build().writeDelimitedTo(out);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

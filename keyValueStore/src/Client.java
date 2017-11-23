@@ -1,6 +1,7 @@
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 
@@ -15,13 +16,34 @@ public class Client{
 		
 		Scanner scan = new Scanner(System.in);
 		
+		Thread receive = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						InputStream in = cc.sock.getInputStream();
+						KeyValue.KeyValueMessage incoming = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
+						if(incoming != null) {
+							KeyValue.WriteResponse wr = incoming.getWriteResponse();
+							System.out.println(wr.getId() + " " + wr.getWriteReply());
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}			
+		});
+		
 		while(true) {
 			String value = scan.next();
 			if(value == null){
 				System.out.println("Enter correct input");
 				break;	
 			}
-			System.out.println(value);
+		//	System.out.println(value);
 			String[] splitValue;
 			splitValue = value.split(",");
 			KeyValue.KeyValueMessage.Builder keymessage = KeyValue.KeyValueMessage.newBuilder();
@@ -34,7 +56,6 @@ public class Client{
 				keymessage.setGetKey(getMethod.build());
 			}
 			if(splitValue[0].equalsIgnoreCase("put")) {
-				System.out.println("here");
 				int key = Integer.parseInt(splitValue[1]);
 				String input = splitValue[2];
 				int clevel = Integer.parseInt(splitValue[3]);
@@ -47,10 +68,10 @@ public class Client{
 			try {
 				Socket send;
 				if(cc.sock == null) {
-					System.out.println("Socket");
 					send = new Socket(cc.coIp,cc.coPort);
 					keymessage.setConnection(1);
 					cc.setSocket(send);
+					receive.start();
 				}
 				else {
 					send = cc.getSocket();

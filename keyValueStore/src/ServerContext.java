@@ -40,42 +40,4 @@ public class ServerContext {
 		}
 	}
 	
-	public void handleClient(KeyValue.KeyValueMessage incoming) {
-		if(incoming.hasPutKey()) {
-			KeyValue.Put put = null;
-			put = incoming.getPutKey();
-			//System.out.println(put.getKey() + " " + put.getValue() + " " + put.getConsistency());
-			KeyValue.Put.Builder putserver = KeyValue.Put.newBuilder();
-			putserver.setKey(put.getKey());
-			putserver.setValue(put.getValue());
-			putserver.setConsistency(put.getConsistency());
-			Date date = new Date();
-			long time = date.getTime();
-			putserver.setTime(time);
-			KeyValue.KeyValueMessage.Builder km = KeyValue.KeyValueMessage.newBuilder();
-			km.setConnection(0);
-			km.setPutKey(putserver).build();
-			sendToServers(km);
-		}
-	}
-
-	public void sendToServers(KeyValue.KeyValueMessage.Builder in) {
-		
-		for(String temp: serversIp.keySet()) {
-			try {
-				Socket send = new Socket(serversIp.get(temp), serversPort.get(temp));
-				OutputStream out = send.getOutputStream();
-				in.build().writeDelimitedTo(out);
-				out.flush();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-	}
-	
 }

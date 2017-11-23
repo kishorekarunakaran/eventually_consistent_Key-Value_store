@@ -16,7 +16,7 @@ message Put{
 }
 
 message WriteResponse{
-  uint32 id = 1;
+  uint32 key = 1;
   bool writeReply = 2;
 }
 
