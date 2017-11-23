@@ -7,8 +7,8 @@ public class ReplicaServer{
 	
 	public static void main(String[] args){
 
-		if(args.length != 2){
-			System.out.println("Usage: ./server server1 9090 conf.txt\n");
+		if(args.length != 3){
+			System.out.println("Usage: ./server server1 9090 conf.txt\n" + " " + args.length);
 			System.exit(0);
 		}
 		
@@ -22,22 +22,32 @@ public class ReplicaServer{
 		catch(IOException i) {
 			System.out.println(i);
 		}
-		Thread cl = new Thread();
 		
 		Socket request = null;
-		try {
-			request = sc.server.accept();
-			InputStream in = request.getInputStream();
-			KeyValue.KeyValueMessage incoming = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
-			if(incoming.getConnection() == 1) {
-				sc.handleClient(incoming);
+		while(true) {
+			try {
+				request = sc.server.accept();
+				System.out.println("Accepted");
+				InputStream in = request.getInputStream();
+				KeyValue.KeyValueMessage incoming = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
+				if(incoming.getConnection() == 1) {
+					System.out.println("Client");
+					sc.handleClient(incoming);
+					Thread cl = new Thread(new Coordinator(request,sc));
+					cl.start();
+				}
+				if(incoming.getConnection() == 0){
+					System.out.println("server");
+					KeyValue.Put put = incoming.getPutKey();
+					KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
+					sc.store.put(put.getKey(),temp);
+					sc.printStore();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			cl = new Thread(new Coordinator(request, sc));
-			cl.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
-		
+	
 }
