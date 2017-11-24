@@ -1,19 +1,20 @@
-import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Date;
 import java.util.HashMap;
 
 public class ServerContext {
 	
-	public String name = null;
-	public ServerSocket server;
-	public int port = 0;
-	public HashMap<String,String> serversIp = new HashMap<String,String>();
-	public HashMap<String,Integer> serversPort = new HashMap<String,Integer>();
-	public HashMap<Integer,KeyStore> store = new HashMap<Integer,KeyStore>();
+	private String name = null;
+	static ServerSocket server;
+	static int port = 0;
+	
+	//map<serverNames,Ip> to store all ip addresses of servers
+	static HashMap<String,String> serversIp = new HashMap<String,String>();
+	
+	//map<serverNames,port> to store all port numbers of servers
+	static HashMap<String,Integer> serversPort = new HashMap<String,Integer>();
+	
+	//In memory data structure to store key value pairs
+	static HashMap<Integer,KeyStore> store = new HashMap<Integer,KeyStore>();
 	
 	public ServerContext(String nameIn, int portIn) {
 		name = nameIn;

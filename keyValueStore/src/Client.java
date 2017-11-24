@@ -23,9 +23,11 @@ public class Client{
 				while(true) {
 					try {
 						InputStream in = cc.sock.getInputStream();
-						KeyValue.KeyValueMessage incoming = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
-						if(incoming != null) {
-							KeyValue.WriteResponse wr = incoming.getWriteResponse();
+						KeyValue.KeyValueMessage incomingMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
+						System.out.println("Here..!");
+						if(incomingMsg.hasWriteResponse()) {
+							System.out.println("Received response from co-ordinator..!!");
+							KeyValue.WriteResponse wr = incomingMsg.getWriteResponse();
 							System.out.println(wr.getId() + " " + wr.getWriteReply());
 						}
 					} catch (IOException e) {
@@ -66,17 +68,17 @@ public class Client{
 				keymessage.setPutKey(putMethod.build());
 			}
 			try {
-				Socket send;
+				//Socket send;
 				if(cc.sock == null) {
-					send = new Socket(cc.coIp,cc.coPort);
+					cc.sock = new Socket(cc.coIp,cc.coPort);
 					keymessage.setConnection(1);
-					cc.setSocket(send);
+					//cc.setSocket(send);
 					receive.start();
 				}
 				else {
-					send = cc.getSocket();
+					//send = cc.getSocket();
 				}
-				OutputStream out = send.getOutputStream();
+				OutputStream out = cc.sock.getOutputStream();
 				keymessage.build().writeDelimitedTo(out);
 				out.flush();
 			} catch (UnknownHostException e) {

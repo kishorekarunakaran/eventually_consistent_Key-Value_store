@@ -3,10 +3,10 @@ import java.util.HashMap;
 
 public class ClientContext {
 	
-	public String coordinator = null;
-	public String coIp = null;
-	public int coPort = 0;
-	public Socket sock = null;
+	private String coordinator = null;
+	static String coIp = null;
+	static int coPort = 0;
+	static Socket sock = null;
 
 	public ClientContext(String coor) {
 		coordinator = coor;
@@ -22,20 +22,12 @@ public class ClientContext {
 			String[] splitValue;
 			splitValue = value.split(" ");
 			if(coordinator.equalsIgnoreCase(splitValue[0])) {
-				this.coIp = splitValue[1];
-				this.coPort = Integer.parseInt(splitValue[2]);
+				coIp = splitValue[1];
+				coPort = Integer.parseInt(splitValue[2]);
 			}		
 		}
 
 		System.out.println(coIp + " " + coPort);
 	}
 		
-	public void setSocket(Socket in) {
-		this.sock = in;
-	}
-	
-	public Socket getSocket() {
-		return this.sock;
-	}
-	
 }
