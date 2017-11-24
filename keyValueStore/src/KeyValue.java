@@ -621,9 +621,9 @@ public final class KeyValue {
     long getTime();
 
     /**
-     * <code>uint32 hinteddHandoff = 6;</code>
+     * <code>uint32 hintedHandoff = 6;</code>
      */
-    int getHinteddHandoff();
+    int getHintedHandoff();
   }
   /**
    * Protobuf type {@code Put}
@@ -643,7 +643,7 @@ public final class KeyValue {
       consistency_ = 0;
       id_ = 0;
       time_ = 0L;
-      hinteddHandoff_ = 0;
+      hintedHandoff_ = 0;
     }
 
     @java.lang.Override
@@ -702,7 +702,7 @@ public final class KeyValue {
             }
             case 48: {
 
-              hinteddHandoff_ = input.readUInt32();
+              hintedHandoff_ = input.readUInt32();
               break;
             }
           }
@@ -799,13 +799,13 @@ public final class KeyValue {
       return time_;
     }
 
-    public static final int HINTEDDHANDOFF_FIELD_NUMBER = 6;
-    private int hinteddHandoff_;
+    public static final int HINTEDHANDOFF_FIELD_NUMBER = 6;
+    private int hintedHandoff_;
     /**
-     * <code>uint32 hinteddHandoff = 6;</code>
+     * <code>uint32 hintedHandoff = 6;</code>
      */
-    public int getHinteddHandoff() {
-      return hinteddHandoff_;
+    public int getHintedHandoff() {
+      return hintedHandoff_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -835,8 +835,8 @@ public final class KeyValue {
       if (time_ != 0L) {
         output.writeUInt64(5, time_);
       }
-      if (hinteddHandoff_ != 0) {
-        output.writeUInt32(6, hinteddHandoff_);
+      if (hintedHandoff_ != 0) {
+        output.writeUInt32(6, hintedHandoff_);
       }
       unknownFields.writeTo(output);
     }
@@ -865,9 +865,9 @@ public final class KeyValue {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(5, time_);
       }
-      if (hinteddHandoff_ != 0) {
+      if (hintedHandoff_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(6, hinteddHandoff_);
+          .computeUInt32Size(6, hintedHandoff_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -895,8 +895,8 @@ public final class KeyValue {
           == other.getId());
       result = result && (getTime()
           == other.getTime());
-      result = result && (getHinteddHandoff()
-          == other.getHinteddHandoff());
+      result = result && (getHintedHandoff()
+          == other.getHintedHandoff());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -919,8 +919,8 @@ public final class KeyValue {
       hash = (37 * hash) + TIME_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTime());
-      hash = (37 * hash) + HINTEDDHANDOFF_FIELD_NUMBER;
-      hash = (53 * hash) + getHinteddHandoff();
+      hash = (37 * hash) + HINTEDHANDOFF_FIELD_NUMBER;
+      hash = (53 * hash) + getHintedHandoff();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1060,7 +1060,7 @@ public final class KeyValue {
 
         time_ = 0L;
 
-        hinteddHandoff_ = 0;
+        hintedHandoff_ = 0;
 
         return this;
       }
@@ -1089,7 +1089,7 @@ public final class KeyValue {
         result.consistency_ = consistency_;
         result.id_ = id_;
         result.time_ = time_;
-        result.hinteddHandoff_ = hinteddHandoff_;
+        result.hintedHandoff_ = hintedHandoff_;
         onBuilt();
         return result;
       }
@@ -1147,8 +1147,8 @@ public final class KeyValue {
         if (other.getTime() != 0L) {
           setTime(other.getTime());
         }
-        if (other.getHinteddHandoff() != 0) {
-          setHinteddHandoff(other.getHinteddHandoff());
+        if (other.getHintedHandoff() != 0) {
+          setHintedHandoff(other.getHintedHandoff());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1350,28 +1350,28 @@ public final class KeyValue {
         return this;
       }
 
-      private int hinteddHandoff_ ;
+      private int hintedHandoff_ ;
       /**
-       * <code>uint32 hinteddHandoff = 6;</code>
+       * <code>uint32 hintedHandoff = 6;</code>
        */
-      public int getHinteddHandoff() {
-        return hinteddHandoff_;
+      public int getHintedHandoff() {
+        return hintedHandoff_;
       }
       /**
-       * <code>uint32 hinteddHandoff = 6;</code>
+       * <code>uint32 hintedHandoff = 6;</code>
        */
-      public Builder setHinteddHandoff(int value) {
+      public Builder setHintedHandoff(int value) {
         
-        hinteddHandoff_ = value;
+        hintedHandoff_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>uint32 hinteddHandoff = 6;</code>
+       * <code>uint32 hintedHandoff = 6;</code>
        */
-      public Builder clearHinteddHandoff() {
+      public Builder clearHintedHandoff() {
         
-        hinteddHandoff_ = 0;
+        hintedHandoff_ = 0;
         onChanged();
         return this;
       }
@@ -1429,9 +1429,9 @@ public final class KeyValue {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>uint32 id = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
-    int getId();
+    int getKey();
 
     /**
      * <code>bool writeReply = 2;</code>
@@ -1451,7 +1451,7 @@ public final class KeyValue {
       super(builder);
     }
     private WriteResponse() {
-      id_ = 0;
+      key_ = 0;
       writeReply_ = false;
     }
 
@@ -1485,7 +1485,7 @@ public final class KeyValue {
             }
             case 8: {
 
-              id_ = input.readUInt32();
+              key_ = input.readUInt32();
               break;
             }
             case 16: {
@@ -1517,13 +1517,13 @@ public final class KeyValue {
               KeyValue.WriteResponse.class, KeyValue.WriteResponse.Builder.class);
     }
 
-    public static final int ID_FIELD_NUMBER = 1;
-    private int id_;
+    public static final int KEY_FIELD_NUMBER = 1;
+    private int key_;
     /**
-     * <code>uint32 id = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
-    public int getId() {
-      return id_;
+    public int getKey() {
+      return key_;
     }
 
     public static final int WRITEREPLY_FIELD_NUMBER = 2;
@@ -1547,8 +1547,8 @@ public final class KeyValue {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (id_ != 0) {
-        output.writeUInt32(1, id_);
+      if (key_ != 0) {
+        output.writeUInt32(1, key_);
       }
       if (writeReply_ != false) {
         output.writeBool(2, writeReply_);
@@ -1561,9 +1561,9 @@ public final class KeyValue {
       if (size != -1) return size;
 
       size = 0;
-      if (id_ != 0) {
+      if (key_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, id_);
+          .computeUInt32Size(1, key_);
       }
       if (writeReply_ != false) {
         size += com.google.protobuf.CodedOutputStream
@@ -1585,8 +1585,8 @@ public final class KeyValue {
       KeyValue.WriteResponse other = (KeyValue.WriteResponse) obj;
 
       boolean result = true;
-      result = result && (getId()
-          == other.getId());
+      result = result && (getKey()
+          == other.getKey());
       result = result && (getWriteReply()
           == other.getWriteReply());
       result = result && unknownFields.equals(other.unknownFields);
@@ -1600,8 +1600,8 @@ public final class KeyValue {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + getId();
+      hash = (37 * hash) + KEY_FIELD_NUMBER;
+      hash = (53 * hash) + getKey();
       hash = (37 * hash) + WRITEREPLY_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getWriteReply());
@@ -1734,7 +1734,7 @@ public final class KeyValue {
       }
       public Builder clear() {
         super.clear();
-        id_ = 0;
+        key_ = 0;
 
         writeReply_ = false;
 
@@ -1760,7 +1760,7 @@ public final class KeyValue {
 
       public KeyValue.WriteResponse buildPartial() {
         KeyValue.WriteResponse result = new KeyValue.WriteResponse(this);
-        result.id_ = id_;
+        result.key_ = key_;
         result.writeReply_ = writeReply_;
         onBuilt();
         return result;
@@ -1803,8 +1803,8 @@ public final class KeyValue {
 
       public Builder mergeFrom(KeyValue.WriteResponse other) {
         if (other == KeyValue.WriteResponse.getDefaultInstance()) return this;
-        if (other.getId() != 0) {
-          setId(other.getId());
+        if (other.getKey() != 0) {
+          setKey(other.getKey());
         }
         if (other.getWriteReply() != false) {
           setWriteReply(other.getWriteReply());
@@ -1836,28 +1836,28 @@ public final class KeyValue {
         return this;
       }
 
-      private int id_ ;
+      private int key_ ;
       /**
-       * <code>uint32 id = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
-      public int getId() {
-        return id_;
+      public int getKey() {
+        return key_;
       }
       /**
-       * <code>uint32 id = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
-      public Builder setId(int value) {
+      public Builder setKey(int value) {
         
-        id_ = value;
+        key_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>uint32 id = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
-      public Builder clearId() {
+      public Builder clearKey() {
         
-        id_ = 0;
+        key_ = 0;
         onChanged();
         return this;
       }
@@ -1936,39 +1936,45 @@ public final class KeyValue {
 
   }
 
-  public interface ReturnValueOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ReturnValue)
+  public interface ReadResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ReadResponse)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string key = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
-    java.lang.String getKey();
-    /**
-     * <code>string key = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getKeyBytes();
+    int getKey();
 
     /**
-     * <code>uint64 time = 2;</code>
+     * <code>string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
+
+    /**
+     * <code>uint64 time = 3;</code>
      */
     long getTime();
   }
   /**
-   * Protobuf type {@code ReturnValue}
+   * Protobuf type {@code ReadResponse}
    */
-  public  static final class ReturnValue extends
+  public  static final class ReadResponse extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ReturnValue)
-      ReturnValueOrBuilder {
+      // @@protoc_insertion_point(message_implements:ReadResponse)
+      ReadResponseOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use ReturnValue.newBuilder() to construct.
-    private ReturnValue(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use ReadResponse.newBuilder() to construct.
+    private ReadResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private ReturnValue() {
-      key_ = "";
+    private ReadResponse() {
+      key_ = 0;
+      value_ = "";
       time_ = 0L;
     }
 
@@ -1977,7 +1983,7 @@ public final class KeyValue {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private ReturnValue(
+    private ReadResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2000,13 +2006,18 @@ public final class KeyValue {
               }
               break;
             }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 8: {
 
-              key_ = s;
+              key_ = input.readUInt32();
               break;
             }
-            case 16: {
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              value_ = s;
+              break;
+            }
+            case 24: {
 
               time_ = input.readUInt64();
               break;
@@ -2025,54 +2036,63 @@ public final class KeyValue {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return KeyValue.internal_static_ReturnValue_descriptor;
+      return KeyValue.internal_static_ReadResponse_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return KeyValue.internal_static_ReturnValue_fieldAccessorTable
+      return KeyValue.internal_static_ReadResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              KeyValue.ReturnValue.class, KeyValue.ReturnValue.Builder.class);
+              KeyValue.ReadResponse.class, KeyValue.ReadResponse.Builder.class);
     }
 
     public static final int KEY_FIELD_NUMBER = 1;
-    private volatile java.lang.Object key_;
+    private int key_;
     /**
-     * <code>string key = 1;</code>
+     * <code>uint32 key = 1;</code>
      */
-    public java.lang.String getKey() {
-      java.lang.Object ref = key_;
+    public int getKey() {
+      return key_;
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object value_;
+    /**
+     * <code>string value = 2;</code>
+     */
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        key_ = s;
+        value_ = s;
         return s;
       }
     }
     /**
-     * <code>string key = 1;</code>
+     * <code>string value = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getKeyBytes() {
-      java.lang.Object ref = key_;
+        getValueBytes() {
+      java.lang.Object ref = value_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        key_ = b;
+        value_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int TIME_FIELD_NUMBER = 2;
+    public static final int TIME_FIELD_NUMBER = 3;
     private long time_;
     /**
-     * <code>uint64 time = 2;</code>
+     * <code>uint64 time = 3;</code>
      */
     public long getTime() {
       return time_;
@@ -2090,11 +2110,14 @@ public final class KeyValue {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getKeyBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, key_);
+      if (key_ != 0) {
+        output.writeUInt32(1, key_);
+      }
+      if (!getValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
       }
       if (time_ != 0L) {
-        output.writeUInt64(2, time_);
+        output.writeUInt64(3, time_);
       }
       unknownFields.writeTo(output);
     }
@@ -2104,12 +2127,16 @@ public final class KeyValue {
       if (size != -1) return size;
 
       size = 0;
-      if (!getKeyBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, key_);
+      if (key_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, key_);
+      }
+      if (!getValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
       }
       if (time_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(2, time_);
+          .computeUInt64Size(3, time_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2121,14 +2148,16 @@ public final class KeyValue {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof KeyValue.ReturnValue)) {
+      if (!(obj instanceof KeyValue.ReadResponse)) {
         return super.equals(obj);
       }
-      KeyValue.ReturnValue other = (KeyValue.ReturnValue) obj;
+      KeyValue.ReadResponse other = (KeyValue.ReadResponse) obj;
 
       boolean result = true;
-      result = result && getKey()
-          .equals(other.getKey());
+      result = result && (getKey()
+          == other.getKey());
+      result = result && getValue()
+          .equals(other.getValue());
       result = result && (getTime()
           == other.getTime());
       result = result && unknownFields.equals(other.unknownFields);
@@ -2143,7 +2172,9 @@ public final class KeyValue {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KEY_FIELD_NUMBER;
-      hash = (53 * hash) + getKey().hashCode();
+      hash = (53 * hash) + getKey();
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
       hash = (37 * hash) + TIME_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTime());
@@ -2152,69 +2183,69 @@ public final class KeyValue {
       return hash;
     }
 
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static KeyValue.ReturnValue parseFrom(byte[] data)
+    public static KeyValue.ReadResponse parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static KeyValue.ReturnValue parseFrom(java.io.InputStream input)
+    public static KeyValue.ReadResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static KeyValue.ReturnValue parseDelimitedFrom(java.io.InputStream input)
+    public static KeyValue.ReadResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static KeyValue.ReturnValue parseDelimitedFrom(
+    public static KeyValue.ReadResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static KeyValue.ReturnValue parseFrom(
+    public static KeyValue.ReadResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2226,7 +2257,7 @@ public final class KeyValue {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(KeyValue.ReturnValue prototype) {
+    public static Builder newBuilder(KeyValue.ReadResponse prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -2241,25 +2272,25 @@ public final class KeyValue {
       return builder;
     }
     /**
-     * Protobuf type {@code ReturnValue}
+     * Protobuf type {@code ReadResponse}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ReturnValue)
-        KeyValue.ReturnValueOrBuilder {
+        // @@protoc_insertion_point(builder_implements:ReadResponse)
+        KeyValue.ReadResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return KeyValue.internal_static_ReturnValue_descriptor;
+        return KeyValue.internal_static_ReadResponse_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return KeyValue.internal_static_ReturnValue_fieldAccessorTable
+        return KeyValue.internal_static_ReadResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                KeyValue.ReturnValue.class, KeyValue.ReturnValue.Builder.class);
+                KeyValue.ReadResponse.class, KeyValue.ReadResponse.Builder.class);
       }
 
-      // Construct using KeyValue.ReturnValue.newBuilder()
+      // Construct using KeyValue.ReadResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2276,7 +2307,9 @@ public final class KeyValue {
       }
       public Builder clear() {
         super.clear();
-        key_ = "";
+        key_ = 0;
+
+        value_ = "";
 
         time_ = 0L;
 
@@ -2285,24 +2318,25 @@ public final class KeyValue {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return KeyValue.internal_static_ReturnValue_descriptor;
+        return KeyValue.internal_static_ReadResponse_descriptor;
       }
 
-      public KeyValue.ReturnValue getDefaultInstanceForType() {
-        return KeyValue.ReturnValue.getDefaultInstance();
+      public KeyValue.ReadResponse getDefaultInstanceForType() {
+        return KeyValue.ReadResponse.getDefaultInstance();
       }
 
-      public KeyValue.ReturnValue build() {
-        KeyValue.ReturnValue result = buildPartial();
+      public KeyValue.ReadResponse build() {
+        KeyValue.ReadResponse result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public KeyValue.ReturnValue buildPartial() {
-        KeyValue.ReturnValue result = new KeyValue.ReturnValue(this);
+      public KeyValue.ReadResponse buildPartial() {
+        KeyValue.ReadResponse result = new KeyValue.ReadResponse(this);
         result.key_ = key_;
+        result.value_ = value_;
         result.time_ = time_;
         onBuilt();
         return result;
@@ -2335,18 +2369,21 @@ public final class KeyValue {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof KeyValue.ReturnValue) {
-          return mergeFrom((KeyValue.ReturnValue)other);
+        if (other instanceof KeyValue.ReadResponse) {
+          return mergeFrom((KeyValue.ReadResponse)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(KeyValue.ReturnValue other) {
-        if (other == KeyValue.ReturnValue.getDefaultInstance()) return this;
-        if (!other.getKey().isEmpty()) {
-          key_ = other.key_;
+      public Builder mergeFrom(KeyValue.ReadResponse other) {
+        if (other == KeyValue.ReadResponse.getDefaultInstance()) return this;
+        if (other.getKey() != 0) {
+          setKey(other.getKey());
+        }
+        if (!other.getValue().isEmpty()) {
+          value_ = other.value_;
           onChanged();
         }
         if (other.getTime() != 0L) {
@@ -2365,11 +2402,11 @@ public final class KeyValue {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        KeyValue.ReturnValue parsedMessage = null;
+        KeyValue.ReadResponse parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (KeyValue.ReturnValue) e.getUnfinishedMessage();
+          parsedMessage = (KeyValue.ReadResponse) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2379,84 +2416,110 @@ public final class KeyValue {
         return this;
       }
 
-      private java.lang.Object key_ = "";
+      private int key_ ;
       /**
-       * <code>string key = 1;</code>
+       * <code>uint32 key = 1;</code>
        */
-      public java.lang.String getKey() {
-        java.lang.Object ref = key_;
+      public int getKey() {
+        return key_;
+      }
+      /**
+       * <code>uint32 key = 1;</code>
+       */
+      public Builder setKey(int value) {
+        
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 key = 1;</code>
+       */
+      public Builder clearKey() {
+        
+        key_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object value_ = "";
+      /**
+       * <code>string value = 2;</code>
+       */
+      public java.lang.String getValue() {
+        java.lang.Object ref = value_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          key_ = s;
+          value_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>string value = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getKeyBytes() {
-        java.lang.Object ref = key_;
+          getValueBytes() {
+        java.lang.Object ref = value_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          key_ = b;
+          value_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>string value = 2;</code>
        */
-      public Builder setKey(
+      public Builder setValue(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        key_ = value;
+        value_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>string value = 2;</code>
        */
-      public Builder clearKey() {
+      public Builder clearValue() {
         
-        key_ = getDefaultInstance().getKey();
+        value_ = getDefaultInstance().getValue();
         onChanged();
         return this;
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>string value = 2;</code>
        */
-      public Builder setKeyBytes(
+      public Builder setValueBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        key_ = value;
+        value_ = value;
         onChanged();
         return this;
       }
 
       private long time_ ;
       /**
-       * <code>uint64 time = 2;</code>
+       * <code>uint64 time = 3;</code>
        */
       public long getTime() {
         return time_;
       }
       /**
-       * <code>uint64 time = 2;</code>
+       * <code>uint64 time = 3;</code>
        */
       public Builder setTime(long value) {
         
@@ -2465,7 +2528,7 @@ public final class KeyValue {
         return this;
       }
       /**
-       * <code>uint64 time = 2;</code>
+       * <code>uint64 time = 3;</code>
        */
       public Builder clearTime() {
         
@@ -2484,39 +2547,39 @@ public final class KeyValue {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:ReturnValue)
+      // @@protoc_insertion_point(builder_scope:ReadResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:ReturnValue)
-    private static final KeyValue.ReturnValue DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:ReadResponse)
+    private static final KeyValue.ReadResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new KeyValue.ReturnValue();
+      DEFAULT_INSTANCE = new KeyValue.ReadResponse();
     }
 
-    public static KeyValue.ReturnValue getDefaultInstance() {
+    public static KeyValue.ReadResponse getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<ReturnValue>
-        PARSER = new com.google.protobuf.AbstractParser<ReturnValue>() {
-      public ReturnValue parsePartialFrom(
+    private static final com.google.protobuf.Parser<ReadResponse>
+        PARSER = new com.google.protobuf.AbstractParser<ReadResponse>() {
+      public ReadResponse parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ReturnValue(input, extensionRegistry);
+          return new ReadResponse(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<ReturnValue> parser() {
+    public static com.google.protobuf.Parser<ReadResponse> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ReturnValue> getParserForType() {
+    public com.google.protobuf.Parser<ReadResponse> getParserForType() {
       return PARSER;
     }
 
-    public KeyValue.ReturnValue getDefaultInstanceForType() {
+    public KeyValue.ReadResponse getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2566,17 +2629,17 @@ public final class KeyValue {
     KeyValue.WriteResponseOrBuilder getWriteResponseOrBuilder();
 
     /**
-     * <code>.ReturnValue return_value = 4;</code>
+     * <code>.ReadResponse read_response = 4;</code>
      */
-    boolean hasReturnValue();
+    boolean hasReadResponse();
     /**
-     * <code>.ReturnValue return_value = 4;</code>
+     * <code>.ReadResponse read_response = 4;</code>
      */
-    KeyValue.ReturnValue getReturnValue();
+    KeyValue.ReadResponse getReadResponse();
     /**
-     * <code>.ReturnValue return_value = 4;</code>
+     * <code>.ReadResponse read_response = 4;</code>
      */
-    KeyValue.ReturnValueOrBuilder getReturnValueOrBuilder();
+    KeyValue.ReadResponseOrBuilder getReadResponseOrBuilder();
 
     /**
      * <code>uint32 connection = 5;</code>
@@ -2672,14 +2735,14 @@ public final class KeyValue {
               break;
             }
             case 34: {
-              KeyValue.ReturnValue.Builder subBuilder = null;
+              KeyValue.ReadResponse.Builder subBuilder = null;
               if (keyvalueMessageCase_ == 4) {
-                subBuilder = ((KeyValue.ReturnValue) keyvalueMessage_).toBuilder();
+                subBuilder = ((KeyValue.ReadResponse) keyvalueMessage_).toBuilder();
               }
               keyvalueMessage_ =
-                  input.readMessage(KeyValue.ReturnValue.parser(), extensionRegistry);
+                  input.readMessage(KeyValue.ReadResponse.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((KeyValue.ReturnValue) keyvalueMessage_);
+                subBuilder.mergeFrom((KeyValue.ReadResponse) keyvalueMessage_);
                 keyvalueMessage_ = subBuilder.buildPartial();
               }
               keyvalueMessageCase_ = 4;
@@ -2721,7 +2784,7 @@ public final class KeyValue {
       GET_KEY(1),
       PUT_KEY(2),
       WRITE_RESPONSE(3),
-      RETURN_VALUE(4),
+      READ_RESPONSE(4),
       KEYVALUEMESSAGE_NOT_SET(0);
       private final int value;
       private KeyvalueMessageCase(int value) {
@@ -2740,7 +2803,7 @@ public final class KeyValue {
           case 1: return GET_KEY;
           case 2: return PUT_KEY;
           case 3: return WRITE_RESPONSE;
-          case 4: return RETURN_VALUE;
+          case 4: return READ_RESPONSE;
           case 0: return KEYVALUEMESSAGE_NOT_SET;
           default: return null;
         }
@@ -2834,30 +2897,30 @@ public final class KeyValue {
       return KeyValue.WriteResponse.getDefaultInstance();
     }
 
-    public static final int RETURN_VALUE_FIELD_NUMBER = 4;
+    public static final int READ_RESPONSE_FIELD_NUMBER = 4;
     /**
-     * <code>.ReturnValue return_value = 4;</code>
+     * <code>.ReadResponse read_response = 4;</code>
      */
-    public boolean hasReturnValue() {
+    public boolean hasReadResponse() {
       return keyvalueMessageCase_ == 4;
     }
     /**
-     * <code>.ReturnValue return_value = 4;</code>
+     * <code>.ReadResponse read_response = 4;</code>
      */
-    public KeyValue.ReturnValue getReturnValue() {
+    public KeyValue.ReadResponse getReadResponse() {
       if (keyvalueMessageCase_ == 4) {
-         return (KeyValue.ReturnValue) keyvalueMessage_;
+         return (KeyValue.ReadResponse) keyvalueMessage_;
       }
-      return KeyValue.ReturnValue.getDefaultInstance();
+      return KeyValue.ReadResponse.getDefaultInstance();
     }
     /**
-     * <code>.ReturnValue return_value = 4;</code>
+     * <code>.ReadResponse read_response = 4;</code>
      */
-    public KeyValue.ReturnValueOrBuilder getReturnValueOrBuilder() {
+    public KeyValue.ReadResponseOrBuilder getReadResponseOrBuilder() {
       if (keyvalueMessageCase_ == 4) {
-         return (KeyValue.ReturnValue) keyvalueMessage_;
+         return (KeyValue.ReadResponse) keyvalueMessage_;
       }
-      return KeyValue.ReturnValue.getDefaultInstance();
+      return KeyValue.ReadResponse.getDefaultInstance();
     }
 
     public static final int CONNECTION_FIELD_NUMBER = 5;
@@ -2891,7 +2954,7 @@ public final class KeyValue {
         output.writeMessage(3, (KeyValue.WriteResponse) keyvalueMessage_);
       }
       if (keyvalueMessageCase_ == 4) {
-        output.writeMessage(4, (KeyValue.ReturnValue) keyvalueMessage_);
+        output.writeMessage(4, (KeyValue.ReadResponse) keyvalueMessage_);
       }
       if (connection_ != 0) {
         output.writeUInt32(5, connection_);
@@ -2918,7 +2981,7 @@ public final class KeyValue {
       }
       if (keyvalueMessageCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (KeyValue.ReturnValue) keyvalueMessage_);
+          .computeMessageSize(4, (KeyValue.ReadResponse) keyvalueMessage_);
       }
       if (connection_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -2959,8 +3022,8 @@ public final class KeyValue {
               .equals(other.getWriteResponse());
           break;
         case 4:
-          result = result && getReturnValue()
-              .equals(other.getReturnValue());
+          result = result && getReadResponse()
+              .equals(other.getReadResponse());
           break;
         case 0:
         default:
@@ -2992,8 +3055,8 @@ public final class KeyValue {
           hash = (53 * hash) + getWriteResponse().hashCode();
           break;
         case 4:
-          hash = (37 * hash) + RETURN_VALUE_FIELD_NUMBER;
-          hash = (53 * hash) + getReturnValue().hashCode();
+          hash = (37 * hash) + READ_RESPONSE_FIELD_NUMBER;
+          hash = (53 * hash) + getReadResponse().hashCode();
           break;
         case 0:
         default:
@@ -3175,10 +3238,10 @@ public final class KeyValue {
           }
         }
         if (keyvalueMessageCase_ == 4) {
-          if (returnValueBuilder_ == null) {
+          if (readResponseBuilder_ == null) {
             result.keyvalueMessage_ = keyvalueMessage_;
           } else {
-            result.keyvalueMessage_ = returnValueBuilder_.build();
+            result.keyvalueMessage_ = readResponseBuilder_.build();
           }
         }
         result.connection_ = connection_;
@@ -3240,8 +3303,8 @@ public final class KeyValue {
             mergeWriteResponse(other.getWriteResponse());
             break;
           }
-          case RETURN_VALUE: {
-            mergeReturnValue(other.getReturnValue());
+          case READ_RESPONSE: {
+            mergeReadResponse(other.getReadResponse());
             break;
           }
           case KEYVALUEMESSAGE_NOT_SET: {
@@ -3699,67 +3762,67 @@ public final class KeyValue {
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          KeyValue.ReturnValue, KeyValue.ReturnValue.Builder, KeyValue.ReturnValueOrBuilder> returnValueBuilder_;
+          KeyValue.ReadResponse, KeyValue.ReadResponse.Builder, KeyValue.ReadResponseOrBuilder> readResponseBuilder_;
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public boolean hasReturnValue() {
+      public boolean hasReadResponse() {
         return keyvalueMessageCase_ == 4;
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public KeyValue.ReturnValue getReturnValue() {
-        if (returnValueBuilder_ == null) {
+      public KeyValue.ReadResponse getReadResponse() {
+        if (readResponseBuilder_ == null) {
           if (keyvalueMessageCase_ == 4) {
-            return (KeyValue.ReturnValue) keyvalueMessage_;
+            return (KeyValue.ReadResponse) keyvalueMessage_;
           }
-          return KeyValue.ReturnValue.getDefaultInstance();
+          return KeyValue.ReadResponse.getDefaultInstance();
         } else {
           if (keyvalueMessageCase_ == 4) {
-            return returnValueBuilder_.getMessage();
+            return readResponseBuilder_.getMessage();
           }
-          return KeyValue.ReturnValue.getDefaultInstance();
+          return KeyValue.ReadResponse.getDefaultInstance();
         }
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public Builder setReturnValue(KeyValue.ReturnValue value) {
-        if (returnValueBuilder_ == null) {
+      public Builder setReadResponse(KeyValue.ReadResponse value) {
+        if (readResponseBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           keyvalueMessage_ = value;
           onChanged();
         } else {
-          returnValueBuilder_.setMessage(value);
+          readResponseBuilder_.setMessage(value);
         }
         keyvalueMessageCase_ = 4;
         return this;
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public Builder setReturnValue(
-          KeyValue.ReturnValue.Builder builderForValue) {
-        if (returnValueBuilder_ == null) {
+      public Builder setReadResponse(
+          KeyValue.ReadResponse.Builder builderForValue) {
+        if (readResponseBuilder_ == null) {
           keyvalueMessage_ = builderForValue.build();
           onChanged();
         } else {
-          returnValueBuilder_.setMessage(builderForValue.build());
+          readResponseBuilder_.setMessage(builderForValue.build());
         }
         keyvalueMessageCase_ = 4;
         return this;
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public Builder mergeReturnValue(KeyValue.ReturnValue value) {
-        if (returnValueBuilder_ == null) {
+      public Builder mergeReadResponse(KeyValue.ReadResponse value) {
+        if (readResponseBuilder_ == null) {
           if (keyvalueMessageCase_ == 4 &&
-              keyvalueMessage_ != KeyValue.ReturnValue.getDefaultInstance()) {
-            keyvalueMessage_ = KeyValue.ReturnValue.newBuilder((KeyValue.ReturnValue) keyvalueMessage_)
+              keyvalueMessage_ != KeyValue.ReadResponse.getDefaultInstance()) {
+            keyvalueMessage_ = KeyValue.ReadResponse.newBuilder((KeyValue.ReadResponse) keyvalueMessage_)
                 .mergeFrom(value).buildPartial();
           } else {
             keyvalueMessage_ = value;
@@ -3767,18 +3830,18 @@ public final class KeyValue {
           onChanged();
         } else {
           if (keyvalueMessageCase_ == 4) {
-            returnValueBuilder_.mergeFrom(value);
+            readResponseBuilder_.mergeFrom(value);
           }
-          returnValueBuilder_.setMessage(value);
+          readResponseBuilder_.setMessage(value);
         }
         keyvalueMessageCase_ = 4;
         return this;
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public Builder clearReturnValue() {
-        if (returnValueBuilder_ == null) {
+      public Builder clearReadResponse() {
+        if (readResponseBuilder_ == null) {
           if (keyvalueMessageCase_ == 4) {
             keyvalueMessageCase_ = 0;
             keyvalueMessage_ = null;
@@ -3789,49 +3852,49 @@ public final class KeyValue {
             keyvalueMessageCase_ = 0;
             keyvalueMessage_ = null;
           }
-          returnValueBuilder_.clear();
+          readResponseBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public KeyValue.ReturnValue.Builder getReturnValueBuilder() {
-        return getReturnValueFieldBuilder().getBuilder();
+      public KeyValue.ReadResponse.Builder getReadResponseBuilder() {
+        return getReadResponseFieldBuilder().getBuilder();
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
-      public KeyValue.ReturnValueOrBuilder getReturnValueOrBuilder() {
-        if ((keyvalueMessageCase_ == 4) && (returnValueBuilder_ != null)) {
-          return returnValueBuilder_.getMessageOrBuilder();
+      public KeyValue.ReadResponseOrBuilder getReadResponseOrBuilder() {
+        if ((keyvalueMessageCase_ == 4) && (readResponseBuilder_ != null)) {
+          return readResponseBuilder_.getMessageOrBuilder();
         } else {
           if (keyvalueMessageCase_ == 4) {
-            return (KeyValue.ReturnValue) keyvalueMessage_;
+            return (KeyValue.ReadResponse) keyvalueMessage_;
           }
-          return KeyValue.ReturnValue.getDefaultInstance();
+          return KeyValue.ReadResponse.getDefaultInstance();
         }
       }
       /**
-       * <code>.ReturnValue return_value = 4;</code>
+       * <code>.ReadResponse read_response = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          KeyValue.ReturnValue, KeyValue.ReturnValue.Builder, KeyValue.ReturnValueOrBuilder> 
-          getReturnValueFieldBuilder() {
-        if (returnValueBuilder_ == null) {
+          KeyValue.ReadResponse, KeyValue.ReadResponse.Builder, KeyValue.ReadResponseOrBuilder> 
+          getReadResponseFieldBuilder() {
+        if (readResponseBuilder_ == null) {
           if (!(keyvalueMessageCase_ == 4)) {
-            keyvalueMessage_ = KeyValue.ReturnValue.getDefaultInstance();
+            keyvalueMessage_ = KeyValue.ReadResponse.getDefaultInstance();
           }
-          returnValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              KeyValue.ReturnValue, KeyValue.ReturnValue.Builder, KeyValue.ReturnValueOrBuilder>(
-                  (KeyValue.ReturnValue) keyvalueMessage_,
+          readResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              KeyValue.ReadResponse, KeyValue.ReadResponse.Builder, KeyValue.ReadResponseOrBuilder>(
+                  (KeyValue.ReadResponse) keyvalueMessage_,
                   getParentForChildren(),
                   isClean());
           keyvalueMessage_ = null;
         }
         keyvalueMessageCase_ = 4;
         onChanged();;
-        return returnValueBuilder_;
+        return readResponseBuilder_;
       }
 
       private int connection_ ;
@@ -3924,10 +3987,10 @@ public final class KeyValue {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_WriteResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ReturnValue_descriptor;
+    internal_static_ReadResponse_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ReturnValue_fieldAccessorTable;
+      internal_static_ReadResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_KeyValueMessage_descriptor;
   private static final 
@@ -3943,17 +4006,18 @@ public final class KeyValue {
   static {
     java.lang.String[] descriptorData = {
       "\n\016KeyValue.proto\";\n\003Get\022\013\n\003key\030\001 \001(\r\022\023\n\013" +
-      "consistency\030\002 \001(\r\022\022\n\nreadRepair\030\003 \001(\r\"h\n" +
+      "consistency\030\002 \001(\r\022\022\n\nreadRepair\030\003 \001(\r\"g\n" +
       "\003Put\022\013\n\003key\030\001 \001(\r\022\r\n\005value\030\002 \001(\t\022\023\n\013cons" +
       "istency\030\003 \001(\r\022\n\n\002id\030\004 \001(\r\022\014\n\004time\030\005 \001(\004\022" +
-      "\026\n\016hinteddHandoff\030\006 \001(\r\"/\n\rWriteResponse" +
-      "\022\n\n\002id\030\001 \001(\r\022\022\n\nwriteReply\030\002 \001(\010\"(\n\013Retu" +
-      "rnValue\022\013\n\003key\030\001 \001(\t\022\014\n\004time\030\002 \001(\004\"\273\001\n\017K" +
-      "eyValueMessage\022\027\n\007get_key\030\001 \001(\0132\004.GetH\000\022" +
-      "\027\n\007put_key\030\002 \001(\0132\004.PutH\000\022(\n\016write_respon" +
-      "se\030\003 \001(\0132\016.WriteResponseH\000\022$\n\014return_val",
-      "ue\030\004 \001(\0132\014.ReturnValueH\000\022\022\n\nconnection\030\005" +
-      " \001(\rB\022\n\020keyvalue_messageb\006proto3"
+      "\025\n\rhintedHandoff\030\006 \001(\r\"0\n\rWriteResponse\022" +
+      "\013\n\003key\030\001 \001(\r\022\022\n\nwriteReply\030\002 \001(\010\"8\n\014Read" +
+      "Response\022\013\n\003key\030\001 \001(\r\022\r\n\005value\030\002 \001(\t\022\014\n\004" +
+      "time\030\003 \001(\004\"\275\001\n\017KeyValueMessage\022\027\n\007get_ke" +
+      "y\030\001 \001(\0132\004.GetH\000\022\027\n\007put_key\030\002 \001(\0132\004.PutH\000" +
+      "\022(\n\016write_response\030\003 \001(\0132\016.WriteResponse",
+      "H\000\022&\n\rread_response\030\004 \001(\0132\r.ReadResponse" +
+      "H\000\022\022\n\nconnection\030\005 \001(\rB\022\n\020keyvalue_messa" +
+      "geb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3978,25 +4042,25 @@ public final class KeyValue {
     internal_static_Put_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Put_descriptor,
-        new java.lang.String[] { "Key", "Value", "Consistency", "Id", "Time", "HinteddHandoff", });
+        new java.lang.String[] { "Key", "Value", "Consistency", "Id", "Time", "HintedHandoff", });
     internal_static_WriteResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_WriteResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_WriteResponse_descriptor,
-        new java.lang.String[] { "Id", "WriteReply", });
-    internal_static_ReturnValue_descriptor =
+        new java.lang.String[] { "Key", "WriteReply", });
+    internal_static_ReadResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_ReturnValue_fieldAccessorTable = new
+    internal_static_ReadResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ReturnValue_descriptor,
-        new java.lang.String[] { "Key", "Time", });
+        internal_static_ReadResponse_descriptor,
+        new java.lang.String[] { "Key", "Value", "Time", });
     internal_static_KeyValueMessage_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_KeyValueMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_KeyValueMessage_descriptor,
-        new java.lang.String[] { "GetKey", "PutKey", "WriteResponse", "ReturnValue", "Connection", "KeyvalueMessage", });
+        new java.lang.String[] { "GetKey", "PutKey", "WriteResponse", "ReadResponse", "Connection", "KeyvalueMessage", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

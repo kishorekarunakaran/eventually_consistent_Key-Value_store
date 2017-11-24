@@ -24,11 +24,21 @@ public class Client{
 					try {
 						InputStream in = cc.sock.getInputStream();
 						KeyValue.KeyValueMessage incomingMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
-						System.out.println("Here..!");
+						System.out.println("");
+						System.out.println("Received response from co-ordinator..!!");
+
 						if(incomingMsg.hasWriteResponse()) {
-							System.out.println("Received response from co-ordinator..!!");
 							KeyValue.WriteResponse wr = incomingMsg.getWriteResponse();
-							System.out.println(wr.getId() + " " + wr.getWriteReply());
+							System.out.println(wr.getKey() + " " + wr.getWriteReply());
+						}
+						
+						if(incomingMsg.hasReadResponse()) {
+							KeyValue.ReadResponse readResponse = incomingMsg.getReadResponse();
+							
+							if(!readResponse.getValue().equals("EMPTY"))
+								System.out.println(readResponse.getKey() + " " + readResponse.getValue());
+							else
+								System.out.println("Key " + readResponse.getKey() + " not present in KeyValue store" );
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

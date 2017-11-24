@@ -37,7 +37,7 @@ public class ServerContext {
 
 	public void printStore() {
 		for(int key: store.keySet()) {
-			System.out.println(store.get(key).key + " " + store.get(key).value + " " + store.get(key).timestamp);
+			System.out.println(store.get(key).getKey() + " " + store.get(key).getValue() + " " + store.get(key).getTimestamp());
 		}
 	}
 	

@@ -45,22 +45,48 @@ public class ReplicaServer{
 				
 				//0 -> message from replica servers
 				if(keyValueMsg.getConnection() == 0){
-					KeyValue.Put put = keyValueMsg.getPutKey();
-					KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
-					sc.store.put(put.getKey(),temp);
-
-					System.out.println("Message written to keyStore..!!");
-					sc.printStore();
 					
-					OutputStream out = request.getOutputStream();
-					KeyValue.KeyValueMessage.Builder res = KeyValue.KeyValueMessage.newBuilder();
+					KeyValue.KeyValueMessage.Builder keyValMsgBuilder = KeyValue.KeyValueMessage.newBuilder();
 					KeyValue.WriteResponse.Builder wr = KeyValue.WriteResponse.newBuilder();
-					wr.setId(put.getKey());
-					wr.setWriteReply(true);
+					OutputStream out = null;
 					
-					//reply back to co-ordinator after message written to keystore
-					res.setWriteResponse(wr.build());
-					res.build().writeDelimitedTo(out);
+					if(keyValueMsg.hasPutKey()) {
+						KeyValue.Put put = keyValueMsg.getPutKey();
+						KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
+						sc.store.put(put.getKey(),temp);
+						
+						System.out.println("Message written to keyStore..!!");
+						sc.printStore();
+						
+						wr.setKey(put.getKey());
+						wr.setWriteReply(true);
+						
+						//reply back to co-ordinator after message written to keystore
+						out = request.getOutputStream();
+						keyValMsgBuilder.setWriteResponse(wr.build());
+						keyValMsgBuilder.build().writeDelimitedTo(out);
+					}
+					
+					if(keyValueMsg.hasGetKey()) {
+						int key = keyValueMsg.getGetKey().getKey();
+						KeyStore keyValueObj = sc.store.get(key);
+						
+						KeyValue.ReadResponse.Builder readResp = KeyValue.ReadResponse.newBuilder();
+						if(keyValueObj != null) {
+							readResp.setKey(keyValueObj.getKey());
+							readResp.setValue(keyValueObj.getValue());
+							readResp.setTime(keyValueObj.getTimestamp());
+						}else {
+							readResp.setKey(key);
+							readResp.setValue("EMPTY");
+						}
+						
+						//reply back to co-ordinator after message written to keystore
+						out = request.getOutputStream();
+						keyValMsgBuilder.setReadResponse(readResp);
+						keyValMsgBuilder.build().writeDelimitedTo(out);
+					}
+					
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

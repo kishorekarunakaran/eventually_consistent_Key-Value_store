@@ -12,7 +12,7 @@ message Put{
   uint32 consistency = 3;
   uint32 id = 4;
   uint64 time = 5;
-  uint32 hinteddHandoff=6;
+  uint32 hintedHandoff=6;
 }
 
 message WriteResponse{
@@ -20,9 +20,10 @@ message WriteResponse{
   bool writeReply = 2;
 }
 
-message ReturnValue {
-  string key = 1;
-  uint64 time = 2;
+message ReadResponse {
+  uint32 key = 1;
+  string value = 2;
+  uint64 time = 3;
 }
 
 message KeyValueMessage {
@@ -30,7 +31,7 @@ message KeyValueMessage {
     Get get_key = 1;
     Put put_key = 2;
     WriteResponse write_response = 3;
-    ReturnValue return_value = 4;  
+    ReadResponse read_response = 4;  
   }
   uint32 connection = 5;
 }

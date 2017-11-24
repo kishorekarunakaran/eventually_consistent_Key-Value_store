@@ -27,10 +27,11 @@ public class Coordinator implements Runnable{
 	 */
 	private void handleClient(KeyValue.KeyValueMessage incomingMsg) {
 		
+		KeyValue.KeyValueMessage.Builder keyValueBuilder = null;
+		
 		//recevied put msg from client
 		if(incomingMsg.hasPutKey()) {
 			KeyValue.Put put = incomingMsg.getPutKey();
-			//System.out.println(put.getKey() + " " + put.getValue() + " " + put.getConsistency());
 			
 			KeyValue.Put.Builder putserver = KeyValue.Put.newBuilder();
 			putserver.setKey(put.getKey());
@@ -43,12 +44,28 @@ public class Coordinator implements Runnable{
 			
 			consistencyMap.put(putserver.getKey(),putserver.getConsistency());
 			
-			KeyValue.KeyValueMessage.Builder keyValueBuilder = KeyValue.KeyValueMessage.newBuilder();
+			keyValueBuilder = KeyValue.KeyValueMessage.newBuilder();
 			keyValueBuilder.setConnection(0);
 			keyValueBuilder.setPutKey(putserver).build();
 			
 			sendToServers(keyValueBuilder);
 			
+		}
+		
+		if(incomingMsg.hasGetKey()) {
+			KeyValue.Get getMessage = incomingMsg.getGetKey();
+			
+			KeyValue.Get.Builder getMsgBuilder = KeyValue.Get.newBuilder();
+			getMsgBuilder.setKey(getMessage.getKey());
+			getMsgBuilder.setConsistency(getMessage.getConsistency());
+			
+			consistencyMap.put(getMessage.getKey(), getMessage.getConsistency());
+			
+			keyValueBuilder = KeyValue.KeyValueMessage.newBuilder();
+			keyValueBuilder.setConnection(0);
+			keyValueBuilder.setGetKey(getMsgBuilder);
+		
+			sendToServers(keyValueBuilder);
 		}
 	}
 
@@ -100,7 +117,7 @@ public class Coordinator implements Runnable{
 		
 		if(responseMsg.hasWriteResponse()) {
 			KeyValue.WriteResponse wr = responseMsg.getWriteResponse();
-			int key = wr.getId();
+			int key = wr.getKey();
 			if(wr.getWriteReply() && ( consistencyMap.get(key) > 0 )) {
 				int val = consistencyMap.get(key);
 				
@@ -122,6 +139,33 @@ public class Coordinator implements Runnable{
 				res.build().writeDelimitedTo(out);
 			}
 		}
+		
+		if(responseMsg.hasReadResponse()) {
+			KeyValue.ReadResponse readResp = responseMsg.getReadResponse();
+			int key = readResp.getKey();
+			
+			if(( consistencyMap.get(key) > 0 )) {
+				int val = consistencyMap.get(key);
+				
+				//Calculate total number of response received 
+				val = val - 1;
+				consistencyMap.replace(key,val);
+			}
+			
+			//IF total no. of response received is equal to consistency level, return to client
+			if(consistencyMap.get(key) == 0) {
+				System.out.println("Response received from all client(equal to consistency level) for key= " + key);
+				consistencyMap.replace(key, -1);
+				
+				//send response to client
+				KeyValue.KeyValueMessage.Builder res = KeyValue.KeyValueMessage.newBuilder();
+				res.setReadResponse(readResp);
+				
+				OutputStream out = clientSocket.getOutputStream();
+				res.build().writeDelimitedTo(out);
+			}
+		}
+		
 	}
 	
 	@Override
