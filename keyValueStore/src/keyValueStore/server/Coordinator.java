@@ -1,3 +1,5 @@
+package keyValueStore.server;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -6,14 +8,22 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 
+import keyValueStore.keyValue.KeyValue;
+
 public class Coordinator implements Runnable{
 	
 	private Socket clientSocket = null;
 	private ServerContext sc = null;
 	private KeyValue.KeyValueMessage keyValueMsg = null;
 	
-	//Map<Key,Consistency> 
+	//Map<Id,Consistency> 
 	private HashMap<Integer,Integer> consistencyMap = new HashMap<Integer,Integer>();
+	
+	//Map<Id,read response received>
+	private HashMap<Integer, Integer> readResponseMap = new HashMap<Integer,Integer>();
+	
+	//Map<Id, latest key-value pair>
+	private HashMap<Integer,ReadRepair> readRepairMap = new HashMap<Integer,ReadRepair>();
 	
 	public Coordinator(Socket in, ServerContext scIn, KeyValue.KeyValueMessage msgIn) {
 		clientSocket = in;
@@ -41,8 +51,9 @@ public class Coordinator implements Runnable{
 			Date date = new Date();
 			long time = date.getTime();
 			putserver.setTime(time);
+			putserver.setId(put.getId());
 			
-			consistencyMap.put(putserver.getKey(),putserver.getConsistency());
+			consistencyMap.put(putserver.getId(),putserver.getConsistency());
 			
 			keyValueBuilder = KeyValue.KeyValueMessage.newBuilder();
 			keyValueBuilder.setConnection(0);
@@ -58,8 +69,10 @@ public class Coordinator implements Runnable{
 			KeyValue.Get.Builder getMsgBuilder = KeyValue.Get.newBuilder();
 			getMsgBuilder.setKey(getMessage.getKey());
 			getMsgBuilder.setConsistency(getMessage.getConsistency());
+			getMsgBuilder.setId(getMessage.getId());
 			
-			consistencyMap.put(getMessage.getKey(), getMessage.getConsistency());
+			consistencyMap.put(getMessage.getId(), getMessage.getConsistency());
+			readResponseMap.put(getMessage.getId(), 0);
 			
 			keyValueBuilder = KeyValue.KeyValueMessage.newBuilder();
 			keyValueBuilder.setConnection(0);
@@ -117,19 +130,19 @@ public class Coordinator implements Runnable{
 		
 		if(responseMsg.hasWriteResponse()) {
 			KeyValue.WriteResponse wr = responseMsg.getWriteResponse();
-			int key = wr.getKey();
-			if(wr.getWriteReply() && ( consistencyMap.get(key) > 0 )) {
-				int val = consistencyMap.get(key);
+			int id = wr.getId();
+			if(wr.getWriteReply() && ( consistencyMap.get(id) > 0 )) {
+				int val = consistencyMap.get(id);
 				
 				//Calculate total number of response received 
 				val = val - 1;
-				consistencyMap.replace(key,val);
+				consistencyMap.replace(id,val);
 			}
 			
 			//IF total no. of response received is equal to consistency level, return to client
-			if(consistencyMap.get(key) == 0) {
-				System.out.println("Response received from all client(equal to consistency level) for key= " + key + " " + wr.getWriteReply());
-				consistencyMap.replace(key, -1);
+			if(consistencyMap.get(id) == 0) {
+				System.out.println("Response received from all client(equal to consistency level) for key= " + id + " " + wr.getWriteReply());
+				consistencyMap.replace(id, -1);
 				
 				//send response to client
 				KeyValue.KeyValueMessage.Builder res = KeyValue.KeyValueMessage.newBuilder();
@@ -142,20 +155,36 @@ public class Coordinator implements Runnable{
 		
 		if(responseMsg.hasReadResponse()) {
 			KeyValue.ReadResponse readResp = responseMsg.getReadResponse();
-			int key = readResp.getKey();
+			int id = readResp.getId();
 			
-			if(( consistencyMap.get(key) > 0 )) {
-				int val = consistencyMap.get(key);
-				
-				//Calculate total number of response received 
-				val = val - 1;
-				consistencyMap.replace(key,val);
+			//First response received..add's the id and the key-value messages to readRepairMap
+			if(!readRepairMap.containsKey(id)) {			
+				ReadRepair r = new ReadRepair(id, readResp.getKey(), readResp.getValue(), readResp.getTime());
+				readRepairMap.put(id, r);
+			}
+			
+			int val = readResponseMap.get(id);
+			readResponseMap.replace(id, val+1);
+			
+			long time = readResp.getTime();
+			
+			//Checks if the received message has a timestamp greater than the one in readRepairMap for the id; if true replaces with the latest timestamp;
+			if(time > readRepairMap.get(id).getTimestamp()) {
+				readRepairMap.get(id).setId(id);
+				readRepairMap.get(id).setKey(readResp.getKey());
+				readRepairMap.get(id).setValue(readResp.getValue());
+				readRepairMap.get(id).setTimestamp(readResp.getTime());
+			}
+			
+			//if received message has a timestamp lesser than the one in readRepairMap, then the corresponding server has to be sent the updated key-value pair
+			if(time < readRepairMap.get(id).getTimestamp()) {
+				//send the latest timestamp message to the server
 			}
 			
 			//IF total no. of response received is equal to consistency level, return to client
-			if(consistencyMap.get(key) == 0) {
-				System.out.println("Response received from all client(equal to consistency level) for key= " + key);
-				consistencyMap.replace(key, -1);
+			if(consistencyMap.get(id) == readResponseMap.get(id)) {
+				System.out.println("Response received from clients(equal to consistency level) for key= " + id);
+				consistencyMap.replace(id, -1);
 				
 				//send response to client
 				KeyValue.KeyValueMessage.Builder res = KeyValue.KeyValueMessage.newBuilder();
@@ -165,7 +194,6 @@ public class Coordinator implements Runnable{
 				res.build().writeDelimitedTo(out);
 			}
 		}
-		
 	}
 	
 	@Override

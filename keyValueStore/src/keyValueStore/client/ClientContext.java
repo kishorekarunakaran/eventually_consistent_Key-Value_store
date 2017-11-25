@@ -1,5 +1,7 @@
+package keyValueStore.client;
+
 import java.net.Socket;
-import java.util.HashMap;
+import keyValueStore.util.FileProcessor;
 
 public class ClientContext {
 	

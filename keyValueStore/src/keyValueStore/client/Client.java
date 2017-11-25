@@ -1,9 +1,15 @@
+package keyValueStore.client;
+
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
+
+import keyValueStore.keyValue.KeyValue;
+import keyValueStore.util.FileProcessor;
+import keyValueStore.util.uniqueIdGenerator;
 
 public class Client{
 		
@@ -65,6 +71,7 @@ public class Client{
 				KeyValue.Get.Builder getMethod = KeyValue.Get.newBuilder();
 				getMethod.setKey(key);
 				getMethod.setConsistency(clevel);
+				getMethod.setId(uniqueIdGenerator.getUniqueId());
 				keymessage.setGetKey(getMethod.build());
 			}
 			if(splitValue[0].equalsIgnoreCase("put")) {
@@ -75,6 +82,7 @@ public class Client{
 				putMethod.setKey(key);
 				putMethod.setValue(input);
 				putMethod.setConsistency(clevel);
+				putMethod.setId(uniqueIdGenerator.getUniqueId());
 				keymessage.setPutKey(putMethod.build());
 			}
 			try {
@@ -102,4 +110,5 @@ public class Client{
 		}
 		
 	}
+
 }

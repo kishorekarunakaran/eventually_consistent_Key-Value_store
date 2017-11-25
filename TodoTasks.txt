@@ -1,4 +1,3 @@
 Tasks::
-1. Consistency map key should be unique for each request(get or put). Generate a unique ID for each request.
-2. Coordinator should check for latest timestamp for all GET responses
-3. Replica server multithreaded implementation 
+1. Perform read repair
+2. Replica server multithreaded implementation 

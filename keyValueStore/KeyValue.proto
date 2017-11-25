@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+package keyValueStore.keyValue;
+
 message Get{
   uint32 key=1;
   uint32 consistency = 2;
   uint32 readRepair=3;
+  uint32 id = 4;
 }
 
 message Put{
@@ -18,12 +21,14 @@ message Put{
 message WriteResponse{
   uint32 key = 1;
   bool writeReply = 2;
+  uint32 id = 3;
 }
 
 message ReadResponse {
   uint32 key = 1;
   string value = 2;
   uint64 time = 3;
+  uint32 id = 4;
 }
 
 message KeyValueMessage {

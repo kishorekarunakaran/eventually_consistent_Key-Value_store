@@ -1,9 +1,14 @@
+package keyValueStore.server;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import keyValueStore.keyValue.KeyValue;
+import keyValueStore.util.FileProcessor;
 
 public class ReplicaServer{
 	
@@ -31,7 +36,7 @@ public class ReplicaServer{
 				System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() +" " + + sc.port);
 				
 				request = sc.server.accept();
-				System.out.println("New connection accepted");
+				System.out.println("\nNew connection accepted");
 				
 				InputStream in = request.getInputStream();
 				KeyValue.KeyValueMessage keyValueMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
@@ -45,7 +50,7 @@ public class ReplicaServer{
 				
 				//0 -> message from replica servers
 				if(keyValueMsg.getConnection() == 0){
-					
+					System.out.println("Received msg from Server");
 					KeyValue.KeyValueMessage.Builder keyValMsgBuilder = KeyValue.KeyValueMessage.newBuilder();
 					KeyValue.WriteResponse.Builder wr = KeyValue.WriteResponse.newBuilder();
 					OutputStream out = null;
@@ -59,6 +64,7 @@ public class ReplicaServer{
 						sc.printStore();
 						
 						wr.setKey(put.getKey());
+						wr.setId(put.getId());
 						wr.setWriteReply(true);
 						
 						//reply back to co-ordinator after message written to keystore
@@ -76,9 +82,11 @@ public class ReplicaServer{
 							readResp.setKey(keyValueObj.getKey());
 							readResp.setValue(keyValueObj.getValue());
 							readResp.setTime(keyValueObj.getTimestamp());
+							readResp.setId(keyValueMsg.getGetKey().getId());
 						}else {
 							readResp.setKey(key);
 							readResp.setValue("EMPTY");
+							readResp.setId(keyValueMsg.getGetKey().getId());
 						}
 						
 						//reply back to co-ordinator after message written to keystore

@@ -1,11 +1,14 @@
+package keyValueStore.server;
 
-public class KeyStore{
+public class ReadRepair {
 	
+	private int id = 0;
 	private int key = 0;
 	private String value = null;
 	private long timestamp = 0;
 	
-	public KeyStore(int keyIn, String valueIn, long timeIn) {
+	public ReadRepair(int idIn, int keyIn, String valueIn, long timeIn) {
+		id = idIn;
 		key = keyIn;
 		value = valueIn;
 		timestamp = timeIn;
@@ -35,5 +38,14 @@ public class KeyStore{
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 
 }
