@@ -3,6 +3,7 @@ package keyValueStore.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -90,9 +91,11 @@ public class Coordinator implements Runnable{
 		
 		for(String serverName : sc.serversIp.keySet()) {
 			try {
+				
 				Socket socket = new Socket(sc.serversIp.get(serverName), sc.serversPort.get(serverName));
 				OutputStream out = socket.getOutputStream();
 				in.build().writeDelimitedTo(out);
+				sc.addConnectedServers(serverName, true);
 				out.flush();
 				
 				//Thread to listen response from the requested server
@@ -100,10 +103,11 @@ public class Coordinator implements Runnable{
 					
 					public void run() {
 						try {
+							String server_name = serverName;
 							InputStream re = socket.getInputStream();
 							KeyValue.KeyValueMessage responseMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(re);
 							
-							updateConsistencyMap(responseMsg);
+							updateConsistencyMap(server_name,responseMsg);
 							
 						}catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -112,7 +116,10 @@ public class Coordinator implements Runnable{
 					}
 				}).start();
 				
-			} catch (UnknownHostException e) {
+			}catch(ConnectException e) {
+				sc.addConnectedServers(serverName, false);
+			}
+			catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -126,7 +133,7 @@ public class Coordinator implements Runnable{
 	 * @param responseMsg
 	 * @throws IOException
 	 */
-	private synchronized void updateConsistencyMap(KeyValue.KeyValueMessage responseMsg) throws IOException {
+	private synchronized void updateConsistencyMap(String serverName, KeyValue.KeyValueMessage responseMsg) throws IOException {
 		
 		if(responseMsg.hasWriteResponse()) {
 			KeyValue.WriteResponse wr = responseMsg.getWriteResponse();
@@ -160,6 +167,7 @@ public class Coordinator implements Runnable{
 			//First response received..add's the id and the key-value messages to readRepairMap
 			if(!readRepairMap.containsKey(id)) {			
 				ReadRepair r = new ReadRepair(id, readResp.getKey(), readResp.getValue(), readResp.getTime());
+				r.addServers(serverName, true);
 				readRepairMap.put(id, r);
 			}
 			
@@ -174,11 +182,15 @@ public class Coordinator implements Runnable{
 				readRepairMap.get(id).setKey(readResp.getKey());
 				readRepairMap.get(id).setValue(readResp.getValue());
 				readRepairMap.get(id).setTimestamp(readResp.getTime());
+				readRepairMap.get(id).updateServers();
+				readRepairMap.get(id).setReadRepairStatus(true);
+				readRepairMap.get(id).addServers(serverName, true);
 			}
 			
 			//if received message has a timestamp lesser than the one in readRepairMap, then the corresponding server has to be sent the updated key-value pair
 			if(time < readRepairMap.get(id).getTimestamp()) {
-				//send the latest timestamp message to the server
+				readRepairMap.get(id).addServers(serverName, false);
+				readRepairMap.get(id).setReadRepairStatus(true);
 			}
 			
 			//IF total no. of response received is equal to consistency level, return to client
@@ -188,10 +200,54 @@ public class Coordinator implements Runnable{
 				
 				//send response to client
 				KeyValue.KeyValueMessage.Builder res = KeyValue.KeyValueMessage.newBuilder();
-				res.setReadResponse(readResp);
+				KeyValue.ReadResponse.Builder readResponse = KeyValue.ReadResponse.newBuilder();
+				readResponse.setKey(readRepairMap.get(id).getKey());
+				readResponse.setValue(readRepairMap.get(id).getValue());
+				readResponse.setTime(readRepairMap.get(id).getTimestamp());
+				readResponse.setId(readRepairMap.get(id).getId());
+				
+				res.setReadResponse(readResponse);
 				
 				OutputStream out = clientSocket.getOutputStream();
 				res.build().writeDelimitedTo(out);
+			}
+			
+			//All the responses received.. update inconsistant data in other servers if any exist
+			if(readResponseMap.get(id) == sc.getCountConnectedServers()) {
+				
+				//check if readRepair has to be done or not
+				if(readRepairMap.get(id).getReadRepairStatus() == true) {
+					
+					//list of server names that needs to be updated
+					HashMap<String,Boolean> list = readRepairMap.get(id).getServers();
+					
+					KeyValue.KeyValueMessage.Builder keymessage = KeyValue.KeyValueMessage.newBuilder();
+					KeyValue.Put.Builder putMethod = KeyValue.Put.newBuilder();
+					putMethod.setKey(readRepairMap.get(id).getKey());
+					putMethod.setValue(readRepairMap.get(id).getValue());
+					putMethod.setTime(readRepairMap.get(id).getTimestamp());
+					//notify it is an update message to servers..set readRepair field to 1
+					putMethod.setReadRepair(1);
+					keymessage.setPutKey(putMethod.build());
+					
+					for(String name : list.keySet()) {
+						if(list.get(name) == false) {
+							try {
+								System.out.println("Sending readRepair message to " + name + " " + putMethod.getKey());
+								Socket sock = new Socket(sc.serversIp.get(name), sc.serversPort.get(name));
+								OutputStream out = sock.getOutputStream();
+								keymessage.build().writeDelimitedTo(out);
+								
+							}catch(ConnectException e) {
+								sc.addConnectedServers(name, false);
+							}catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
 			}
 		}
 	}

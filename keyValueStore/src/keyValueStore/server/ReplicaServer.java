@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -57,20 +58,37 @@ public class ReplicaServer{
 					
 					if(keyValueMsg.hasPutKey()) {
 						KeyValue.Put put = keyValueMsg.getPutKey();
-						KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
-						sc.store.put(put.getKey(),temp);
 						
-						System.out.println("Message written to keyStore..!!");
-						sc.printStore();
+					//	Random rand = new Random();
+					//	int randomNum = rand.nextInt((5 - 1)) + 1;
+					
+						if(put.getReadRepair() == 1) {
+							
+							KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
+							sc.store.put(put.getKey(),temp);
+							
+							System.out.println("Message updated to keyStore..!!");
+							sc.printStore();
+							
+						}
+						else {
+							
+							KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
+							sc.store.put(put.getKey(),temp);
+							
+							System.out.println("Message written to keyStore..!!");
+							sc.printStore();
+							
+							wr.setKey(put.getKey());
+							wr.setId(put.getId());
+							wr.setWriteReply(true);
 						
-						wr.setKey(put.getKey());
-						wr.setId(put.getId());
-						wr.setWriteReply(true);
-						
-						//reply back to co-ordinator after message written to keystore
-						out = request.getOutputStream();
-						keyValMsgBuilder.setWriteResponse(wr.build());
-						keyValMsgBuilder.build().writeDelimitedTo(out);
+							//reply back to co-ordinator after message written to keystore
+							out = request.getOutputStream();
+							keyValMsgBuilder.setWriteResponse(wr.build());
+							keyValMsgBuilder.build().writeDelimitedTo(out);
+							
+						}
 					}
 					
 					if(keyValueMsg.hasGetKey()) {

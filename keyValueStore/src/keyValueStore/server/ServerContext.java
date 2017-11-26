@@ -4,13 +4,15 @@ import java.net.ServerSocket;
 import java.util.HashMap;
 
 import keyValueStore.util.FileProcessor;
-import keyValueStore.util.uniqueIdGenerator;
 
 public class ServerContext {
 	
 	private String name = null;
 	static ServerSocket server;
 	static int port = 0;
+	
+	//maintains status of the replica servers value = true -> connected,false -> not connectedd
+	private HashMap<String,Boolean> connectedServers = new HashMap<String,Boolean>();
 	
 	//map<serverNames,Ip> to store all ip addresses of servers
 	static HashMap<String,String> serversIp = new HashMap<String,String>();
@@ -44,6 +46,33 @@ public class ServerContext {
 		for(int key: store.keySet()) {
 			System.out.println(store.get(key).getKey() + " " + store.get(key).getValue() + " " + store.get(key).getTimestamp());
 		}
+	}
+
+	public HashMap<String,Boolean> getConnectedServers() {
+		return connectedServers;
+	}
+
+    //Adds the state of the connected server...true -> connected, false -> not connected
+	public void addConnectedServers(String serverName, Boolean b) {
+		
+		if(connectedServers.containsKey(serverName)) {
+			connectedServers.replace(serverName, b);
+		}
+		else {
+			connectedServers.put(serverName, b);
+		}
+	}
+	
+	//returns the number of servers connected
+	public int getCountConnectedServers() {
+		int value = 0;
+		for(String name: connectedServers.keySet()) {
+			if(connectedServers.get(name) == true) {
+				value++;
+			}
+		}
+		
+		return value;
 	}
 	
 }

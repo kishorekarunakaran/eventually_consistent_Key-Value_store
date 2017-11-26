@@ -29,11 +29,6 @@ public final class KeyValue {
     int getConsistency();
 
     /**
-     * <code>uint32 readRepair = 3;</code>
-     */
-    int getReadRepair();
-
-    /**
      * <code>uint32 id = 4;</code>
      */
     int getId();
@@ -53,7 +48,6 @@ public final class KeyValue {
     private Get() {
       key_ = 0;
       consistency_ = 0;
-      readRepair_ = 0;
       id_ = 0;
     }
 
@@ -93,11 +87,6 @@ public final class KeyValue {
             case 16: {
 
               consistency_ = input.readUInt32();
-              break;
-            }
-            case 24: {
-
-              readRepair_ = input.readUInt32();
               break;
             }
             case 32: {
@@ -147,15 +136,6 @@ public final class KeyValue {
       return consistency_;
     }
 
-    public static final int READREPAIR_FIELD_NUMBER = 3;
-    private int readRepair_;
-    /**
-     * <code>uint32 readRepair = 3;</code>
-     */
-    public int getReadRepair() {
-      return readRepair_;
-    }
-
     public static final int ID_FIELD_NUMBER = 4;
     private int id_;
     /**
@@ -183,9 +163,6 @@ public final class KeyValue {
       if (consistency_ != 0) {
         output.writeUInt32(2, consistency_);
       }
-      if (readRepair_ != 0) {
-        output.writeUInt32(3, readRepair_);
-      }
       if (id_ != 0) {
         output.writeUInt32(4, id_);
       }
@@ -204,10 +181,6 @@ public final class KeyValue {
       if (consistency_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(2, consistency_);
-      }
-      if (readRepair_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(3, readRepair_);
       }
       if (id_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -233,8 +206,6 @@ public final class KeyValue {
           == other.getKey());
       result = result && (getConsistency()
           == other.getConsistency());
-      result = result && (getReadRepair()
-          == other.getReadRepair());
       result = result && (getId()
           == other.getId());
       result = result && unknownFields.equals(other.unknownFields);
@@ -252,8 +223,6 @@ public final class KeyValue {
       hash = (53 * hash) + getKey();
       hash = (37 * hash) + CONSISTENCY_FIELD_NUMBER;
       hash = (53 * hash) + getConsistency();
-      hash = (37 * hash) + READREPAIR_FIELD_NUMBER;
-      hash = (53 * hash) + getReadRepair();
       hash = (37 * hash) + ID_FIELD_NUMBER;
       hash = (53 * hash) + getId();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -389,8 +358,6 @@ public final class KeyValue {
 
         consistency_ = 0;
 
-        readRepair_ = 0;
-
         id_ = 0;
 
         return this;
@@ -417,7 +384,6 @@ public final class KeyValue {
         keyValueStore.keyValue.KeyValue.Get result = new keyValueStore.keyValue.KeyValue.Get(this);
         result.key_ = key_;
         result.consistency_ = consistency_;
-        result.readRepair_ = readRepair_;
         result.id_ = id_;
         onBuilt();
         return result;
@@ -465,9 +431,6 @@ public final class KeyValue {
         }
         if (other.getConsistency() != 0) {
           setConsistency(other.getConsistency());
-        }
-        if (other.getReadRepair() != 0) {
-          setReadRepair(other.getReadRepair());
         }
         if (other.getId() != 0) {
           setId(other.getId());
@@ -547,32 +510,6 @@ public final class KeyValue {
       public Builder clearConsistency() {
         
         consistency_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private int readRepair_ ;
-      /**
-       * <code>uint32 readRepair = 3;</code>
-       */
-      public int getReadRepair() {
-        return readRepair_;
-      }
-      /**
-       * <code>uint32 readRepair = 3;</code>
-       */
-      public Builder setReadRepair(int value) {
-        
-        readRepair_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 readRepair = 3;</code>
-       */
-      public Builder clearReadRepair() {
-        
-        readRepair_ = 0;
         onChanged();
         return this;
       }
@@ -676,19 +613,19 @@ public final class KeyValue {
     int getConsistency();
 
     /**
-     * <code>uint32 id = 4;</code>
-     */
-    int getId();
-
-    /**
      * <code>uint64 time = 5;</code>
      */
     long getTime();
 
     /**
-     * <code>uint32 hintedHandoff = 6;</code>
+     * <code>uint32 readRepair = 6;</code>
      */
-    int getHintedHandoff();
+    int getReadRepair();
+
+    /**
+     * <code>uint32 id = 4;</code>
+     */
+    int getId();
   }
   /**
    * Protobuf type {@code keyValueStore.keyValue.Put}
@@ -706,9 +643,9 @@ public final class KeyValue {
       key_ = 0;
       value_ = "";
       consistency_ = 0;
-      id_ = 0;
       time_ = 0L;
-      hintedHandoff_ = 0;
+      readRepair_ = 0;
+      id_ = 0;
     }
 
     @java.lang.Override
@@ -767,7 +704,7 @@ public final class KeyValue {
             }
             case 48: {
 
-              hintedHandoff_ = input.readUInt32();
+              readRepair_ = input.readUInt32();
               break;
             }
           }
@@ -846,15 +783,6 @@ public final class KeyValue {
       return consistency_;
     }
 
-    public static final int ID_FIELD_NUMBER = 4;
-    private int id_;
-    /**
-     * <code>uint32 id = 4;</code>
-     */
-    public int getId() {
-      return id_;
-    }
-
     public static final int TIME_FIELD_NUMBER = 5;
     private long time_;
     /**
@@ -864,13 +792,22 @@ public final class KeyValue {
       return time_;
     }
 
-    public static final int HINTEDHANDOFF_FIELD_NUMBER = 6;
-    private int hintedHandoff_;
+    public static final int READREPAIR_FIELD_NUMBER = 6;
+    private int readRepair_;
     /**
-     * <code>uint32 hintedHandoff = 6;</code>
+     * <code>uint32 readRepair = 6;</code>
      */
-    public int getHintedHandoff() {
-      return hintedHandoff_;
+    public int getReadRepair() {
+      return readRepair_;
+    }
+
+    public static final int ID_FIELD_NUMBER = 4;
+    private int id_;
+    /**
+     * <code>uint32 id = 4;</code>
+     */
+    public int getId() {
+      return id_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -900,8 +837,8 @@ public final class KeyValue {
       if (time_ != 0L) {
         output.writeUInt64(5, time_);
       }
-      if (hintedHandoff_ != 0) {
-        output.writeUInt32(6, hintedHandoff_);
+      if (readRepair_ != 0) {
+        output.writeUInt32(6, readRepair_);
       }
       unknownFields.writeTo(output);
     }
@@ -930,9 +867,9 @@ public final class KeyValue {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(5, time_);
       }
-      if (hintedHandoff_ != 0) {
+      if (readRepair_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(6, hintedHandoff_);
+          .computeUInt32Size(6, readRepair_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -956,12 +893,12 @@ public final class KeyValue {
           .equals(other.getValue());
       result = result && (getConsistency()
           == other.getConsistency());
-      result = result && (getId()
-          == other.getId());
       result = result && (getTime()
           == other.getTime());
-      result = result && (getHintedHandoff()
-          == other.getHintedHandoff());
+      result = result && (getReadRepair()
+          == other.getReadRepair());
+      result = result && (getId()
+          == other.getId());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -979,13 +916,13 @@ public final class KeyValue {
       hash = (53 * hash) + getValue().hashCode();
       hash = (37 * hash) + CONSISTENCY_FIELD_NUMBER;
       hash = (53 * hash) + getConsistency();
-      hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + getId();
       hash = (37 * hash) + TIME_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTime());
-      hash = (37 * hash) + HINTEDHANDOFF_FIELD_NUMBER;
-      hash = (53 * hash) + getHintedHandoff();
+      hash = (37 * hash) + READREPAIR_FIELD_NUMBER;
+      hash = (53 * hash) + getReadRepair();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1121,11 +1058,11 @@ public final class KeyValue {
 
         consistency_ = 0;
 
-        id_ = 0;
-
         time_ = 0L;
 
-        hintedHandoff_ = 0;
+        readRepair_ = 0;
+
+        id_ = 0;
 
         return this;
       }
@@ -1152,9 +1089,9 @@ public final class KeyValue {
         result.key_ = key_;
         result.value_ = value_;
         result.consistency_ = consistency_;
-        result.id_ = id_;
         result.time_ = time_;
-        result.hintedHandoff_ = hintedHandoff_;
+        result.readRepair_ = readRepair_;
+        result.id_ = id_;
         onBuilt();
         return result;
       }
@@ -1206,14 +1143,14 @@ public final class KeyValue {
         if (other.getConsistency() != 0) {
           setConsistency(other.getConsistency());
         }
-        if (other.getId() != 0) {
-          setId(other.getId());
-        }
         if (other.getTime() != 0L) {
           setTime(other.getTime());
         }
-        if (other.getHintedHandoff() != 0) {
-          setHintedHandoff(other.getHintedHandoff());
+        if (other.getReadRepair() != 0) {
+          setReadRepair(other.getReadRepair());
+        }
+        if (other.getId() != 0) {
+          setId(other.getId());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1363,32 +1300,6 @@ public final class KeyValue {
         return this;
       }
 
-      private int id_ ;
-      /**
-       * <code>uint32 id = 4;</code>
-       */
-      public int getId() {
-        return id_;
-      }
-      /**
-       * <code>uint32 id = 4;</code>
-       */
-      public Builder setId(int value) {
-        
-        id_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 id = 4;</code>
-       */
-      public Builder clearId() {
-        
-        id_ = 0;
-        onChanged();
-        return this;
-      }
-
       private long time_ ;
       /**
        * <code>uint64 time = 5;</code>
@@ -1415,28 +1326,54 @@ public final class KeyValue {
         return this;
       }
 
-      private int hintedHandoff_ ;
+      private int readRepair_ ;
       /**
-       * <code>uint32 hintedHandoff = 6;</code>
+       * <code>uint32 readRepair = 6;</code>
        */
-      public int getHintedHandoff() {
-        return hintedHandoff_;
+      public int getReadRepair() {
+        return readRepair_;
       }
       /**
-       * <code>uint32 hintedHandoff = 6;</code>
+       * <code>uint32 readRepair = 6;</code>
        */
-      public Builder setHintedHandoff(int value) {
+      public Builder setReadRepair(int value) {
         
-        hintedHandoff_ = value;
+        readRepair_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>uint32 hintedHandoff = 6;</code>
+       * <code>uint32 readRepair = 6;</code>
        */
-      public Builder clearHintedHandoff() {
+      public Builder clearReadRepair() {
         
-        hintedHandoff_ = 0;
+        readRepair_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int id_ ;
+      /**
+       * <code>uint32 id = 4;</code>
+       */
+      public int getId() {
+        return id_;
+      }
+      /**
+       * <code>uint32 id = 4;</code>
+       */
+      public Builder setId(int value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 id = 4;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = 0;
         onChanged();
         return this;
       }
@@ -4197,22 +4134,21 @@ public final class KeyValue {
   static {
     java.lang.String[] descriptorData = {
       "\n\016KeyValue.proto\022\026keyValueStore.keyValue" +
-      "\"G\n\003Get\022\013\n\003key\030\001 \001(\r\022\023\n\013consistency\030\002 \001(" +
-      "\r\022\022\n\nreadRepair\030\003 \001(\r\022\n\n\002id\030\004 \001(\r\"g\n\003Put" +
-      "\022\013\n\003key\030\001 \001(\r\022\r\n\005value\030\002 \001(\t\022\023\n\013consiste" +
-      "ncy\030\003 \001(\r\022\n\n\002id\030\004 \001(\r\022\014\n\004time\030\005 \001(\004\022\025\n\rh" +
-      "intedHandoff\030\006 \001(\r\"<\n\rWriteResponse\022\013\n\003k" +
-      "ey\030\001 \001(\r\022\022\n\nwriteReply\030\002 \001(\010\022\n\n\002id\030\003 \001(\r" +
-      "\"D\n\014ReadResponse\022\013\n\003key\030\001 \001(\r\022\r\n\005value\030\002" +
-      " \001(\t\022\014\n\004time\030\003 \001(\004\022\n\n\002id\030\004 \001(\r\"\231\002\n\017KeyVa" +
-      "lueMessage\022.\n\007get_key\030\001 \001(\0132\033.keyValueSt",
-      "ore.keyValue.GetH\000\022.\n\007put_key\030\002 \001(\0132\033.ke" +
-      "yValueStore.keyValue.PutH\000\022?\n\016write_resp" +
-      "onse\030\003 \001(\0132%.keyValueStore.keyValue.Writ" +
-      "eResponseH\000\022=\n\rread_response\030\004 \001(\0132$.key" +
-      "ValueStore.keyValue.ReadResponseH\000\022\022\n\nco" +
-      "nnection\030\005 \001(\rB\022\n\020keyvalue_messageb\006prot" +
-      "o3"
+      "\"3\n\003Get\022\013\n\003key\030\001 \001(\r\022\023\n\013consistency\030\002 \001(" +
+      "\r\022\n\n\002id\030\004 \001(\r\"d\n\003Put\022\013\n\003key\030\001 \001(\r\022\r\n\005val" +
+      "ue\030\002 \001(\t\022\023\n\013consistency\030\003 \001(\r\022\014\n\004time\030\005 " +
+      "\001(\004\022\022\n\nreadRepair\030\006 \001(\r\022\n\n\002id\030\004 \001(\r\"<\n\rW" +
+      "riteResponse\022\013\n\003key\030\001 \001(\r\022\022\n\nwriteReply\030" +
+      "\002 \001(\010\022\n\n\002id\030\003 \001(\r\"D\n\014ReadResponse\022\013\n\003key" +
+      "\030\001 \001(\r\022\r\n\005value\030\002 \001(\t\022\014\n\004time\030\003 \001(\004\022\n\n\002i" +
+      "d\030\004 \001(\r\"\231\002\n\017KeyValueMessage\022.\n\007get_key\030\001" +
+      " \001(\0132\033.keyValueStore.keyValue.GetH\000\022.\n\007p",
+      "ut_key\030\002 \001(\0132\033.keyValueStore.keyValue.Pu" +
+      "tH\000\022?\n\016write_response\030\003 \001(\0132%.keyValueSt" +
+      "ore.keyValue.WriteResponseH\000\022=\n\rread_res" +
+      "ponse\030\004 \001(\0132$.keyValueStore.keyValue.Rea" +
+      "dResponseH\000\022\022\n\nconnection\030\005 \001(\rB\022\n\020keyva" +
+      "lue_messageb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4231,13 +4167,13 @@ public final class KeyValue {
     internal_static_keyValueStore_keyValue_Get_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_keyValueStore_keyValue_Get_descriptor,
-        new java.lang.String[] { "Key", "Consistency", "ReadRepair", "Id", });
+        new java.lang.String[] { "Key", "Consistency", "Id", });
     internal_static_keyValueStore_keyValue_Put_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_keyValueStore_keyValue_Put_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_keyValueStore_keyValue_Put_descriptor,
-        new java.lang.String[] { "Key", "Value", "Consistency", "Id", "Time", "HintedHandoff", });
+        new java.lang.String[] { "Key", "Value", "Consistency", "Time", "ReadRepair", "Id", });
     internal_static_keyValueStore_keyValue_WriteResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_keyValueStore_keyValue_WriteResponse_fieldAccessorTable = new

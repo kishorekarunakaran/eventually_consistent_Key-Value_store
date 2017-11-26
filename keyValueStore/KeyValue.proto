@@ -5,7 +5,6 @@ package keyValueStore.keyValue;
 message Get{
   uint32 key=1;
   uint32 consistency = 2;
-  uint32 readRepair=3;
   uint32 id = 4;
 }
 
@@ -13,9 +12,9 @@ message Put{
   uint32 key = 1;
   string value = 2;
   uint32 consistency = 3;
-  uint32 id = 4;
   uint64 time = 5;
-  uint32 hintedHandoff=6;
+  uint32 readRepair = 6;
+  uint32 id = 4;
 }
 
 message WriteResponse{
