@@ -108,6 +108,8 @@ public class Coordinator implements Runnable{
 							KeyValue.KeyValueMessage responseMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(re);
 							
 							updateConsistencyMap(server_name,responseMsg);
+							re.close();
+							socket.close();
 							
 						}catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -210,6 +212,7 @@ public class Coordinator implements Runnable{
 				
 				OutputStream out = clientSocket.getOutputStream();
 				res.build().writeDelimitedTo(out);
+				out.flush();
 			}
 			
 			//All the responses received.. update inconsistant data in other servers if any exist
@@ -237,7 +240,9 @@ public class Coordinator implements Runnable{
 								Socket sock = new Socket(sc.serversIp.get(name), sc.serversPort.get(name));
 								OutputStream out = sock.getOutputStream();
 								keymessage.build().writeDelimitedTo(out);
-								
+								out.flush();
+								out.close();
+								sock.close();
 							}catch(ConnectException e) {
 								sc.addConnectedServers(name, false);
 							}catch (UnknownHostException e) {

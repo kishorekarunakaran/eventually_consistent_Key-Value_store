@@ -30,21 +30,23 @@ public class Client{
 					try {
 						InputStream in = cc.sock.getInputStream();
 						KeyValue.KeyValueMessage incomingMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
-						System.out.println("");
-						System.out.println("Received response from co-ordinator..!!");
+						if(incomingMsg != null) {
+							System.out.println("");
+							System.out.println("Received response from co-ordinator..!!");
 
-						if(incomingMsg.hasWriteResponse()) {
-							KeyValue.WriteResponse wr = incomingMsg.getWriteResponse();
-							System.out.println(wr.getKey() + " " + wr.getWriteReply());
-						}
+							if(incomingMsg.hasWriteResponse()) {
+								KeyValue.WriteResponse wr = incomingMsg.getWriteResponse();
+								System.out.println(wr.getKey() + " " + wr.getWriteReply());
+							}
 						
-						if(incomingMsg.hasReadResponse()) {
-							KeyValue.ReadResponse readResponse = incomingMsg.getReadResponse();
+							if(incomingMsg.hasReadResponse()) {
+								KeyValue.ReadResponse readResponse = incomingMsg.getReadResponse();
 							
-							if(!readResponse.getValue().equals("EMPTY"))
-								System.out.println(readResponse.getKey() + " " + readResponse.getValue());
-							else
-								System.out.println("Key " + readResponse.getKey() + " not present in KeyValue store" );
+								if(!readResponse.getValue().equals("EMPTY"))
+									System.out.println(readResponse.getKey() + " " + readResponse.getValue());
+								else
+									System.out.println("Key " + readResponse.getKey() + " not present in KeyValue store" );
+							}
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

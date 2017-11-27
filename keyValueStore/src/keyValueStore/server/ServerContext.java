@@ -24,7 +24,7 @@ public class ServerContext {
 	static HashMap<Integer,KeyStore> store = new HashMap<Integer,KeyStore>();
 	
 	public ServerContext(String nameIn, int portIn) {
-		name = nameIn;
+		setName(nameIn);
 		port = portIn;
 	}
 
@@ -39,6 +39,26 @@ public class ServerContext {
 			splitValue = value.split(" ");
 			serversIp.put(splitValue[0], splitValue[1]);
 			serversPort.put(splitValue[0], Integer.parseInt(splitValue[2]));
+		}
+	}
+	
+	public void readLog(FileProcessor fp) {
+		
+		while(true) {
+			String line = fp.readLine();
+			if(line == null) {
+				break;
+			}
+			String [] splitValue;
+			splitValue = line.split(" ");
+			int key = Integer.parseInt(splitValue[0]);
+			KeyStore temp = new KeyStore(key,splitValue[1],Long.parseLong(splitValue[2]));
+			if(store.containsKey(key)) {
+				store.replace(key, temp);
+			}
+			else {
+				store.put(key, temp);
+			}
 		}
 	}
 
@@ -73,6 +93,14 @@ public class ServerContext {
 		}
 		
 		return value;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

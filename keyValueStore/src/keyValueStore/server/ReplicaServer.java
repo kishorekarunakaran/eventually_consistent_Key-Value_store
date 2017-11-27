@@ -1,5 +1,6 @@
 package keyValueStore.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -10,6 +11,7 @@ import java.io.OutputStream;
 
 import keyValueStore.keyValue.KeyValue;
 import keyValueStore.util.FileProcessor;
+import keyValueStore.util.writeLog;
 
 public class ReplicaServer{
 	
@@ -23,6 +25,22 @@ public class ReplicaServer{
 		ServerContext sc = new ServerContext(args[0],Integer.parseInt(args[1]));
 		FileProcessor fp = new FileProcessor(args[2]);
 		sc.readFile(fp);
+		fp.close();
+		
+		//log file, path = /log/servername.log
+		String path = "log/" + sc.getName() +".log";			
+		FileProcessor readLog = new FileProcessor(path);
+		
+		//checks if the log file exists or not.. true -> reads log file, false -> file doesn't exist
+		if(readLog.isReadable()) {
+		
+			sc.readLog(readLog);
+			readLog.close();
+			sc.printStore();
+		}
+		
+		//wrireLog class, writes to log..
+		writeLog wrlog = new writeLog(path);
 		
 		try {
 			sc.server = new ServerSocket(sc.port);
@@ -61,6 +79,9 @@ public class ReplicaServer{
 						
 					//	Random rand = new Random();
 					//	int randomNum = rand.nextInt((5 - 1)) + 1;
+						
+						String writeAheadLog = put.getKey() + " " + put.getValue() + " " + put.getTime();
+						wrlog.writeToFile(writeAheadLog);
 					
 						if(put.getReadRepair() == 1) {
 							
@@ -69,6 +90,8 @@ public class ReplicaServer{
 							
 							System.out.println("Message updated to keyStore..!!");
 							sc.printStore();
+							in.close();
+							request.close();
 							
 						}
 						else {
@@ -87,6 +110,10 @@ public class ReplicaServer{
 							out = request.getOutputStream();
 							keyValMsgBuilder.setWriteResponse(wr.build());
 							keyValMsgBuilder.build().writeDelimitedTo(out);
+							out.flush();
+							out.close();
+							in.close();
+							request.close();
 							
 						}
 					}
@@ -111,6 +138,10 @@ public class ReplicaServer{
 						out = request.getOutputStream();
 						keyValMsgBuilder.setReadResponse(readResp);
 						keyValMsgBuilder.build().writeDelimitedTo(out);
+						out.flush();
+						out.close();
+						in.close();
+						request.close();
 					}
 					
 				}
