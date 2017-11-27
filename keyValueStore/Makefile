@@ -6,5 +6,5 @@ all: clean
 	javac -classpath $(LIB_PATH) -d bin/classes/ src/keyValueStore/client/* src/keyValueStore/server/* src/keyValueStore/util/* src/keyValueStore/keyValue/*
 
 clean:
-	rm -rf bin/
+	rm -rf bin/ log/
 

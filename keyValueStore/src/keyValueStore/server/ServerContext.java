@@ -71,6 +71,14 @@ public class ServerContext {
 	public HashMap<String,Boolean> getConnectedServers() {
 		return connectedServers;
 	}
+	
+	public boolean containsServer(String name) {
+		return connectedServers.containsKey(name);
+	}
+	
+	public boolean getServerStatus(String name) {
+		return connectedServers.get(name);
+	}
 
     //Adds the state of the connected server...true -> connected, false -> not connected
 	public void addConnectedServers(String serverName, Boolean b) {

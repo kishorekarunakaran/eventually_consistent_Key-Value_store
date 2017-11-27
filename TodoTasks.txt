@@ -1,3 +1,2 @@
 Tasks::
-1. Perform read repair
-2. Replica server multithreaded implementation 
+1. Handle coordinator failure and client crashes

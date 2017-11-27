@@ -22,9 +22,11 @@ public class Coordinator implements Runnable{
 	
 	//Map<Id,read response received>
 	private HashMap<Integer, Integer> readResponseMap = new HashMap<Integer,Integer>();
+	private HashMap<Integer, Integer> writeResponseMap = new HashMap<Integer,Integer>();
 	
 	//Map<Id, latest key-value pair>
 	private HashMap<Integer,ReadRepair> readRepairMap = new HashMap<Integer,ReadRepair>();
+	private HashMap<String, KeyValue.Put> hintedHandoffMap = new HashMap<String,KeyValue.Put>();
 	
 	public Coordinator(Socket in, ServerContext scIn, KeyValue.KeyValueMessage msgIn) {
 		clientSocket = in;
@@ -55,6 +57,7 @@ public class Coordinator implements Runnable{
 			putserver.setId(put.getId());
 			
 			consistencyMap.put(putserver.getId(),putserver.getConsistency());
+			writeResponseMap.put(putserver.getId(), 0);
 			
 			keyValueBuilder = KeyValue.KeyValueMessage.newBuilder();
 			keyValueBuilder.setConnection(0);
@@ -95,6 +98,10 @@ public class Coordinator implements Runnable{
 				Socket socket = new Socket(sc.serversIp.get(serverName), sc.serversPort.get(serverName));
 				OutputStream out = socket.getOutputStream();
 				in.build().writeDelimitedTo(out);
+				//checks if the previous state of the server is false, then performs hintedhandoff.
+				if(sc.containsServer(serverName) && sc.getServerStatus(serverName) == false) {
+					hintedHandoff(serverName);
+				}
 				sc.addConnectedServers(serverName, true);
 				out.flush();
 				
@@ -108,6 +115,7 @@ public class Coordinator implements Runnable{
 							KeyValue.KeyValueMessage responseMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(re);
 							
 							updateConsistencyMap(server_name,responseMsg);
+							
 							re.close();
 							socket.close();
 							
@@ -119,7 +127,12 @@ public class Coordinator implements Runnable{
 				}).start();
 				
 			}catch(ConnectException e) {
+				//if a server not reachable, set its status to false
 				sc.addConnectedServers(serverName, false);
+				//add the key to the hashmap to send it later
+				if(in.hasPutKey()) {
+					hintedHandoffMap.put(serverName, in.getPutKey());
+				}				
 			}
 			catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -129,6 +142,43 @@ public class Coordinator implements Runnable{
 			
 		}
 	}	
+	
+	
+	public void hintedHandoff(String name) {
+		
+		//loops over the hintedHandoffMap hashmap, matches the server name..if exists, send the key to that server
+		for(String temp: hintedHandoffMap.keySet()) {
+			if(temp.equals(name)) {
+				KeyValue.Put put = hintedHandoffMap.get(name);
+				
+				KeyValue.KeyValueMessage.Builder km = KeyValue.KeyValueMessage.newBuilder();
+				KeyValue.Put.Builder putserver = KeyValue.Put.newBuilder();
+				putserver.setKey(put.getKey());
+				putserver.setValue(put.getValue());
+				putserver.setTime(put.getTime());
+				putserver.setId(put.getId());
+				putserver.setReadRepair(1);
+				km.setConnection(0);
+				km.setPutKey(putserver);
+				
+				Socket socket;
+				try {
+					socket = new Socket(sc.serversIp.get(name), sc.serversPort.get(name));
+					OutputStream out = socket.getOutputStream();
+					km.build().writeDelimitedTo(out);
+					out.flush();
+					socket.close();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}
+		
+	}
 
 	/**
 	 * This function updates the consistency map and responds to client accordingly
@@ -140,16 +190,15 @@ public class Coordinator implements Runnable{
 		if(responseMsg.hasWriteResponse()) {
 			KeyValue.WriteResponse wr = responseMsg.getWriteResponse();
 			int id = wr.getId();
-			if(wr.getWriteReply() && ( consistencyMap.get(id) > 0 )) {
-				int val = consistencyMap.get(id);
+			if(wr.getWriteReply()) {
 				
+				int val = writeResponseMap.get(id);
 				//Calculate total number of response received 
-				val = val - 1;
-				consistencyMap.replace(id,val);
+				writeResponseMap.replace(id,val+1);
 			}
 			
 			//IF total no. of response received is equal to consistency level, return to client
-			if(consistencyMap.get(id) == 0) {
+			if(consistencyMap.get(id) == writeResponseMap.get(id)) {
 				System.out.println("Response received from all client(equal to consistency level) for key= " + id + " " + wr.getWriteReply());
 				consistencyMap.replace(id, -1);
 				
@@ -159,6 +208,7 @@ public class Coordinator implements Runnable{
 				
 				OutputStream out = clientSocket.getOutputStream();
 				res.build().writeDelimitedTo(out);
+				out.flush();
 			}
 		}
 		
