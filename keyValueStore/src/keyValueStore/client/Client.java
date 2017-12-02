@@ -30,22 +30,38 @@ public class Client{
 					try {
 						InputStream in = cc.sock.getInputStream();
 						KeyValue.KeyValueMessage incomingMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
+						
 						if(incomingMsg != null) {
-							System.out.println("");
-							System.out.println("Received response from co-ordinator..!!");
+							
+							System.out.println("\nReceived response from co-ordinator..!!");
 
 							if(incomingMsg.hasWriteResponse()) {
+								
 								KeyValue.WriteResponse wr = incomingMsg.getWriteResponse();
 								System.out.println(wr.getKey() + " " + wr.getWriteReply());
+								
 							}
 						
 							if(incomingMsg.hasReadResponse()) {
+								
 								KeyValue.ReadResponse readResponse = incomingMsg.getReadResponse();
+								KeyValue.KeyValuePair keyStore = readResponse.getKeyval();
+								
+								if(readResponse.getReadStatus()) {
+									System.out.println(keyStore.getKey() + " " + keyStore.getValue());
+								}
+								else {
+									System.out.println("Key " + keyStore.getKey() + " not present in KeyValue store" );
+								}
 							
-								if(!readResponse.getValue().equals("EMPTY"))
-									System.out.println(readResponse.getKey() + " " + readResponse.getValue());
-								else
-									System.out.println("Key " + readResponse.getKey() + " not present in KeyValue store" );
+							}
+							
+							if(incomingMsg.hasException()) {
+								
+								KeyValue.Exception ex = incomingMsg.getException();
+								System.out.println("Exception : " + ex.getMethod() + " Method");
+								System.out.println("\t" + ex.getExceptionMessage());
+								
 							}
 						}
 					} catch (IOException e) {
@@ -63,49 +79,62 @@ public class Client{
 				System.out.println("Enter correct input");
 				break;	
 			}
-		//	System.out.println(value);
+		
 			String[] splitValue;
 			splitValue = value.split(",");
-			KeyValue.KeyValueMessage.Builder keymessage = KeyValue.KeyValueMessage.newBuilder();
+			
+			KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+			try {
+			
 			if(splitValue[0].equalsIgnoreCase("get")) {
+				
 				int key = Integer.parseInt(splitValue[1]);
 				int clevel = Integer.parseInt(splitValue[2]);
+				
 				KeyValue.Get.Builder getMethod = KeyValue.Get.newBuilder();
 				getMethod.setKey(key);
 				getMethod.setConsistency(clevel);
 				getMethod.setId(uniqueIdGenerator.getUniqueId());
-				keymessage.setGetKey(getMethod.build());
+				
+				keyMessage.setGetKey(getMethod.build());
+				
 			}
 			if(splitValue[0].equalsIgnoreCase("put")) {
+				
 				int key = Integer.parseInt(splitValue[1]);
 				String input = splitValue[2];
 				int clevel = Integer.parseInt(splitValue[3]);
+				
+				KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();
+				keyStore.setKey(key);
+				keyStore.setValue(input);
+				
 				KeyValue.Put.Builder putMethod = KeyValue.Put.newBuilder();
-				putMethod.setKey(key);
-				putMethod.setValue(input);
+				putMethod.setKeyval(keyStore.build());
 				putMethod.setConsistency(clevel);
 				putMethod.setId(uniqueIdGenerator.getUniqueId());
-				keymessage.setPutKey(putMethod.build());
+				
+				keyMessage.setPutKey(putMethod.build());
+			}
+			}catch(NumberFormatException i) {
+				System.out.println("Wrong input...");
+				continue;
 			}
 			try {
-				//Socket send;
+				
 				if(cc.sock == null) {
 					cc.sock = new Socket(cc.coIp,cc.coPort);
-					keymessage.setConnection(1);
-					//cc.setSocket(send);
+					keyMessage.setConnection(1);
 					receive.start();
 				}
-				else {
-					//send = cc.getSocket();
-				}
+				
 				OutputStream out = cc.sock.getOutputStream();
-				keymessage.build().writeDelimitedTo(out);
+				keyMessage.build().writeDelimitedTo(out);
 				out.flush();
+				
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		

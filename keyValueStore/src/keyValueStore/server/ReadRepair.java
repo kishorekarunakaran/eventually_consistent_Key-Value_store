@@ -10,6 +10,7 @@ public class ReadRepair {
 	private long timestamp = 0;
 	private HashMap<String,Boolean> servers = new HashMap<String,Boolean>();
 	private Boolean readRepairStatus = false;
+	private Boolean readStatus = false;
 	
 	public ReadRepair(int idIn, int keyIn, String valueIn, long timeIn) {
 		id = idIn;
@@ -68,7 +69,15 @@ public class ReadRepair {
 		return readRepairStatus;
 	}
 
-	public void setReadRepairStatus(Boolean readRepairStatusIn) {
-		readRepairStatus = readRepairStatusIn;
+	public void setReadRepairStatus(Boolean statusIn) {
+		readRepairStatus = statusIn;
+	}
+
+	public Boolean getReadStatus() {
+		return readStatus;
+	}
+
+	public void setReadStatus(Boolean readStatus) {
+		this.readStatus = readStatus;
 	}
 }

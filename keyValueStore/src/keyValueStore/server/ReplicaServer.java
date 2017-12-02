@@ -1,11 +1,10 @@
 package keyValueStore.server;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Random;
+import java.net.UnknownHostException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -48,102 +47,154 @@ public class ReplicaServer{
 		catch(IOException i) {
 			System.out.println(i);
 		}
+
+		try {
+			System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() +" " + + sc.port);
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Socket request = null;
 		while(true) {
 			try {
-				System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() +" " + + sc.port);
 				
 				request = sc.server.accept();
-				System.out.println("\nNew connection accepted");
 				
 				InputStream in = request.getInputStream();
 				KeyValue.KeyValueMessage keyValueMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
 				
 				//1 -> message from client
 				if(keyValueMsg.getConnection() == 1) {
-					System.out.println("Received msg from Client");
+					
+					System.out.println("Received message from Client...");
 					Thread coordinatorThread = new Thread(new Coordinator(request, sc, keyValueMsg));
 					coordinatorThread.start();
+					
 				}
 				
 				//0 -> message from replica servers
 				if(keyValueMsg.getConnection() == 0){
-					System.out.println("Received msg from Server");
-					KeyValue.KeyValueMessage.Builder keyValMsgBuilder = KeyValue.KeyValueMessage.newBuilder();
-					KeyValue.WriteResponse.Builder wr = KeyValue.WriteResponse.newBuilder();
+					
+					System.out.println("Received message from Server...");
+					
+					String receiveServer = keyValueMsg.getServerName();
+					if(sc.containsServer(receiveServer) && sc.getServerStatus(receiveServer) == false) {
+						
+						System.out.println("Performing hinted handoff...");
+						sc.addConnectedServers(receiveServer, true);
+						sc.hintedHandoff(receiveServer);
+					}
+					
+					sc.addConnectedServers(receiveServer, true);
+					
+					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
 					OutputStream out = null;
 					
 					if(keyValueMsg.hasPutKey()) {
+						
 						KeyValue.Put put = keyValueMsg.getPutKey();
 						
 					//	Random rand = new Random();
 					//	int randomNum = rand.nextInt((5 - 1)) + 1;
-						
-						String writeAheadLog = put.getKey() + " " + put.getValue() + " " + put.getTime();
-						wrlog.writeToFile(writeAheadLog);
-					
-						if(put.getReadRepair() == 1) {
+						KeyValue.KeyValuePair keyStore = put.getKeyval();
+
+						String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
+						wrlog.writeToFile(writeAheadLog);						
+						sc.store.put(keyStore.getKey(), keyStore);							
+						System.out.println("Message written to keyStore..!!\n");
+						sc.printStore();
 							
-							KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
-							sc.store.put(put.getKey(),temp);
-							
-							System.out.println("Message updated to keyStore..!!");
-							sc.printStore();
-							in.close();
-							request.close();
-							
-						}
-						else {
-							
-							KeyStore temp = new KeyStore(put.getKey(), put.getValue(), put.getTime());	
-							sc.store.put(put.getKey(),temp);
-							
-							System.out.println("Message written to keyStore..!!");
-							sc.printStore();
-							
-							wr.setKey(put.getKey());
-							wr.setId(put.getId());
-							wr.setWriteReply(true);
-						
-							//reply back to co-ordinator after message written to keystore
-							out = request.getOutputStream();
-							keyValMsgBuilder.setWriteResponse(wr.build());
-							keyValMsgBuilder.build().writeDelimitedTo(out);
-							out.flush();
-							out.close();
-							in.close();
-							request.close();
-							
-						}
-					}
-					
-					if(keyValueMsg.hasGetKey()) {
-						int key = keyValueMsg.getGetKey().getKey();
-						KeyStore keyValueObj = sc.store.get(key);
-						
-						KeyValue.ReadResponse.Builder readResp = KeyValue.ReadResponse.newBuilder();
-						if(keyValueObj != null) {
-							readResp.setKey(keyValueObj.getKey());
-							readResp.setValue(keyValueObj.getValue());
-							readResp.setTime(keyValueObj.getTimestamp());
-							readResp.setId(keyValueMsg.getGetKey().getId());
-						}else {
-							readResp.setKey(key);
-							readResp.setValue("EMPTY");
-							readResp.setId(keyValueMsg.getGetKey().getId());
-						}
+						KeyValue.WriteResponse.Builder wr = KeyValue.WriteResponse.newBuilder();
+						wr.setKey(keyStore.getKey());
+						wr.setId(put.getId());
+						wr.setWriteReply(true);
 						
 						//reply back to co-ordinator after message written to keystore
 						out = request.getOutputStream();
-						keyValMsgBuilder.setReadResponse(readResp);
-						keyValMsgBuilder.build().writeDelimitedTo(out);
+						keyMessage.setWriteResponse(wr.build());
+						keyMessage.build().writeDelimitedTo(out);
 						out.flush();
 						out.close();
 						in.close();
 						request.close();
+							
+					}
+										
+					if(keyValueMsg.hasReadRepair()) {
+						
+						KeyValue.ReadRepair rr = keyValueMsg.getReadRepair();
+						KeyValue.KeyValuePair keyStore = rr.getKeyval();
+						int key = keyStore.getKey();
+						
+						String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
+						wrlog.writeToFile(writeAheadLog);
+						sc.store.put(key, keyStore);						
+						System.out.println("Read Repair done...");
+						sc.printStore();
+						
+						in.close();
+						request.close();
+					
+					}
+										
+					if(keyValueMsg.hasHintedHandoff()) {
+						
+						KeyValue.HintedHandoff hh = keyValueMsg.getHintedHandoff();
+						KeyValue.KeyValuePair keyStore = hh.getKeyval();
+						int key = keyStore.getKey();
+						
+						if(sc.store.containsKey(key) && keyStore.getTime() >= sc.store.get(key).getTime()) {
+							String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
+							wrlog.writeToFile(writeAheadLog);
+							sc.store.replace(key, keyStore);
+							System.out.println("Hinted Handoff done...");
+							sc.printStore();
+						}
+						else {
+							String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
+							wrlog.writeToFile(writeAheadLog);
+							sc.store.put(key, keyStore);
+							System.out.println("Hinted Handoff done...");
+							sc.printStore();
+						}
+										
+						in.close();
+						request.close();
+											
 					}
 					
+					if(keyValueMsg.hasGetKey()) {
+						
+						int key = keyValueMsg.getGetKey().getKey();
+						KeyValue.KeyValuePair keyStore = null;
+						KeyValue.ReadResponse.Builder readResp = KeyValue.ReadResponse.newBuilder();
+						
+						if(sc.store.containsKey(key)) {
+							keyStore = sc.store.get(key);
+							readResp.setKeyval(keyStore);
+							readResp.setId(keyValueMsg.getGetKey().getId());
+							readResp.setReadStatus(true);
+							
+						}					
+						else {
+							KeyValue.KeyValuePair.Builder ks = KeyValue.KeyValuePair.newBuilder();
+							ks.setKey(key);
+							readResp.setKeyval(ks);
+							readResp.setId(keyValueMsg.getGetKey().getId());
+							readResp.setReadStatus(false);
+						}
+						
+						//reply back to co-ordinator...
+						out = request.getOutputStream();
+						keyMessage.setReadResponse(readResp);
+						keyMessage.build().writeDelimitedTo(out);
+						out.flush();
+						out.close();
+						in.close();
+						request.close();
+						
+					}			
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -29,7 +29,7 @@ public class ClientContext {
 			}		
 		}
 
-		System.out.println(coIp + " " + coPort);
+		System.out.println("Co-ordinator Info -> "  + coIp + " " + coPort);
 	}
 		
 }

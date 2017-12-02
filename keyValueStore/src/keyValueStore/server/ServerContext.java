@@ -1,8 +1,17 @@
 package keyValueStore.server;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import keyValueStore.keyValue.KeyValue;
+import keyValueStore.keyValue.KeyValue.KeyValuePair;
+import keyValueStore.keyValue.KeyValue.Put;
 import keyValueStore.util.FileProcessor;
 
 public class ServerContext {
@@ -20,8 +29,11 @@ public class ServerContext {
 	//map<serverNames,port> to store all port numbers of servers
 	static HashMap<String,Integer> serversPort = new HashMap<String,Integer>();
 	
-	//In memory data structure to store key value pairs
-	static HashMap<Integer,KeyStore> store = new HashMap<Integer,KeyStore>();
+	//In memory data structure to store key value pairs	
+	static HashMap<Integer,KeyValue.KeyValuePair> store = new HashMap<Integer,KeyValue.KeyValuePair>();
+	
+	//stores a list of put keys for a crashed server
+	public HashMap<String, ArrayList<KeyValue.HintedHandoff> > hintedHandoffMap = new HashMap<String, ArrayList<KeyValue.HintedHandoff>>();
 	
 	public ServerContext(String nameIn, int portIn) {
 		setName(nameIn);
@@ -39,6 +51,7 @@ public class ServerContext {
 			splitValue = value.split(" ");
 			serversIp.put(splitValue[0], splitValue[1]);
 			serversPort.put(splitValue[0], Integer.parseInt(splitValue[2]));
+			
 		}
 	}
 	
@@ -52,19 +65,24 @@ public class ServerContext {
 			String [] splitValue;
 			splitValue = line.split(" ");
 			int key = Integer.parseInt(splitValue[0]);
-			KeyStore temp = new KeyStore(key,splitValue[1],Long.parseLong(splitValue[2]));
+			
+			KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();			
+			keyStore.setKey(key);
+			keyStore.setValue(splitValue[1]);
+			keyStore.setTime(Long.parseLong(splitValue[2]));
+			
 			if(store.containsKey(key)) {
-				store.replace(key, temp);
+				store.replace(key, keyStore.build());
 			}
 			else {
-				store.put(key, temp);
+				store.put(key, keyStore.build());
 			}
 		}
 	}
 
 	public void printStore() {
-		for(int key: store.keySet()) {
-			System.out.println(store.get(key).getKey() + " " + store.get(key).getValue() + " " + store.get(key).getTimestamp());
+		for(int key: store.keySet()) {		
+			System.out.println(store.get(key).getKey() + "   " + store.get(key).getValue() + "   " + store.get(key).getTime());
 		}
 	}
 
@@ -98,8 +116,7 @@ public class ServerContext {
 			if(connectedServers.get(name) == true) {
 				value++;
 			}
-		}
-		
+		}		
 		return value;
 	}
 
@@ -111,4 +128,37 @@ public class ServerContext {
 		this.name = name;
 	}
 	
+	
+	public void hintedHandoff(String name) {
+		
+		//loops over the hintedHandoffMap hashmap, matches the server name..if exists, send the key to that server
+		if(hintedHandoffMap.containsKey(name)) {
+			ArrayList<KeyValue.HintedHandoff> ls = hintedHandoffMap.get(name);
+				
+				for(KeyValue.HintedHandoff temp : ls) {
+					
+					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+				
+					keyMessage.setConnection(0);
+					keyMessage.setHintedHandoff(temp);
+				
+					Socket socket;
+					try {
+						socket = new Socket(serversIp.get(name), serversPort.get(name));
+						OutputStream out = socket.getOutputStream();
+						keyMessage.build().writeDelimitedTo(out);
+						out.flush();
+						socket.close();
+						
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}				
+				}
+		
+		}
+	}
 }

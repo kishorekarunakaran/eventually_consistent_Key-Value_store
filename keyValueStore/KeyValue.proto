@@ -2,19 +2,22 @@ syntax = "proto3";
 
 package keyValueStore.keyValue;
 
+message KeyValuePair{
+	uint32 key = 1;
+	string value = 2;
+	uint64 time = 3;
+}
+
 message Get{
   uint32 key=1;
   uint32 consistency = 2;
-  uint32 id = 4;
+  uint32 id = 3;
 }
 
 message Put{
-  uint32 key = 1;
-  string value = 2;
-  uint32 consistency = 3;
-  uint64 time = 5;
-  uint32 readRepair = 6;
-  uint32 id = 4;
+  KeyValuePair keyval = 1;
+  uint32 consistency = 2;
+  uint32 id = 3;
 }
 
 message WriteResponse{
@@ -24,19 +27,38 @@ message WriteResponse{
 }
 
 message ReadResponse {
-  uint32 key = 1;
-  string value = 2;
-  uint64 time = 3;
-  uint32 id = 4;
+  KeyValuePair keyval = 1;
+  uint32 id = 2;
+  bool readStatus = 3;
+}
+
+message ReadRepair{
+  KeyValuePair keyval = 1;
+  uint32 id = 2;
+}
+
+message HintedHandoff{
+  KeyValuePair keyval = 1;
+  uint32 id = 2;
+}
+
+message Exception{
+	uint32 key = 1;
+	string method = 2;
+	string exceptionMessage = 3;
 }
 
 message KeyValueMessage {
   oneof keyvalue_message {
     Get get_key = 1;
     Put put_key = 2;
-    WriteResponse write_response = 3;
-    ReadResponse read_response = 4;  
+    ReadRepair read_repair = 3;
+    HintedHandoff hinted_handoff = 4;
+    WriteResponse write_response = 5;
+    ReadResponse read_response = 6;  
+    Exception exception = 7;
   }
-  uint32 connection = 5;
+  uint32 connection = 8;
+  string serverName = 9;
 }
 
