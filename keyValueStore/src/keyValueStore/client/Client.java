@@ -1,5 +1,6 @@
 package keyValueStore.client;
 
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.IOException;
@@ -116,12 +117,14 @@ public class Client{
 				
 				keyMessage.setPutKey(putMethod.build());
 			}
-			}catch(NumberFormatException i) {
+			} catch(NumberFormatException i) {
+				System.out.println("Wrong input...");
+				continue;
+			} catch(Exception e) {
 				System.out.println("Wrong input...");
 				continue;
 			}
-			try {
-				
+			try {				
 				if(cc.sock == null) {
 					cc.sock = new Socket(cc.coIp,cc.coPort);
 					keyMessage.setConnection(1);
@@ -132,14 +135,15 @@ public class Client{
 				keyMessage.build().writeDelimitedTo(out);
 				out.flush();
 				
+			} catch(ConnectException e) {
+				System.out.println("Server down....");
+				e.printStackTrace();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				System.out.println("Server down....");
 				e.printStackTrace();
 			}
-		
-		}
-		
+		}	
 	}
-
 }

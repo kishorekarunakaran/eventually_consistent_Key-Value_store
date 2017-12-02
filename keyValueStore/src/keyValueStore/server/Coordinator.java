@@ -24,6 +24,7 @@ public class Coordinator implements Runnable{
 	
 	//Map<Id,response received>
 	private HashMap<Integer, Integer> readResponseMap = new HashMap<Integer,Integer>();
+	private HashMap<Integer, Integer> repliesMap = new HashMap<Integer,Integer>();
 	private HashMap<Integer, Integer> writeResponseMap = new HashMap<Integer,Integer>();
 	
 	//Map<Id, latest key-value pair>
@@ -71,8 +72,28 @@ public class Coordinator implements Runnable{
 			keyValueBuilder.setConnection(0);
 			keyValueBuilder.setPutKey(putServer.build());
 			
-			sendToServers(keyValueBuilder,consistency);
-
+		//	System.out.println("Servers connected " + sc.getCountConnectedServers());
+			if(sc.getCountConnectedServers() < consistency) {
+				System.out.println("Exception message");
+				KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+				KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
+				excep.setKey(putServer.getKeyval().getKey());
+				excep.setMethod("PUT");
+				excep.setExceptionMessage("Number of online servers is less than the consistency level");
+				keyMessage.setException(excep.build());
+				try {
+					OutputStream out = clientSocket.getOutputStream();
+					keyMessage.build().writeDelimitedTo(out);
+					out.flush();
+					
+				} catch(IOException i) {
+					System.out.println("Client not reachable...");
+					i.printStackTrace();
+				}
+				
+			}else {
+				sendToServers(keyValueBuilder);
+			}
 		}
 		
 		if(incomingMsg.hasGetKey()) {
@@ -88,21 +109,44 @@ public class Coordinator implements Runnable{
 					
 			consistencyMap.put(getMessage.getId(), consistency);
 			readResponseMap.put(getMessage.getId(), 0);
+			repliesMap.put(getMessage.getId(), 0);
 			
 			keyValueBuilder = KeyValue.KeyValueMessage.newBuilder();
 			keyValueBuilder.setConnection(0);
 			keyValueBuilder.setGetKey(getServer.build());
 		
-			sendToServers(keyValueBuilder,consistency);
-
+	//		System.out.println("Servers connected " + sc.getCountConnectedServers());
+			if(sc.getCountConnectedServers() < consistency) {
+				System.out.println("Exception message");
+				System.out.println("Exception message");
+				KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+				KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
+				excep.setKey(getServer.getKey());
+				excep.setMethod("GET");
+				excep.setExceptionMessage("Number of online servers is less than the consistency level");
+				keyMessage.setException(excep.build());
+				try {
+					OutputStream out = clientSocket.getOutputStream();
+					keyMessage.build().writeDelimitedTo(out);
+					out.flush();
+					
+				} catch(IOException i) {
+					System.out.println("Client not reachable...");
+					i.printStackTrace();
+				}
+				
+			}else {
+				sendToServers(keyValueBuilder);
+			}
 		}
+	
 	}
 
 	/**
 	 * This function creates new socket connection to all replica servers and forwards message to servers
 	 * @param in
 	 */
-	private void sendToServers(KeyValue.KeyValueMessage.Builder keyIn, int consistency) {
+	private void sendToServers(KeyValue.KeyValueMessage.Builder keyIn) {
 		
 		for(String serverName : sc.serversIp.keySet()) {
 			try {
@@ -110,12 +154,6 @@ public class Coordinator implements Runnable{
 				Socket socket = new Socket(sc.serversIp.get(serverName), sc.serversPort.get(serverName));
 				OutputStream out = socket.getOutputStream();
 				keyIn.build().writeDelimitedTo(out);
-				
-				//checks if the previous state of the server is false, then performs hintedhandoff.
-				if(sc.containsServer(serverName) && sc.getServerStatus(serverName) == false) {
-					sc.hintedHandoff(serverName);
-				}
-				
 				sc.addConnectedServers(serverName, true);
 				out.flush();
 			
@@ -142,7 +180,10 @@ public class Coordinator implements Runnable{
 				
 			} catch(ConnectException e) {
 				//if a server not reachable, set its status to false
-				sc.addConnectedServers(serverName, false);
+				System.out.println(serverName + "not reachable");
+				
+				sc.addhintServers(serverName, false);
+				
 				//add the key to the hashmap to send it later
 				if(keyIn.hasPutKey()) {
 					ArrayList<KeyValue.HintedHandoff> ls = null;
@@ -164,9 +205,7 @@ public class Coordinator implements Runnable{
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			
-			
+			}		
 		}
 	}	
 	
@@ -198,9 +237,15 @@ public class Coordinator implements Runnable{
 				KeyValue.KeyValueMessage.Builder responseClient = KeyValue.KeyValueMessage.newBuilder();
 				responseClient.setWriteResponse(wr);
 				
-				OutputStream out = clientSocket.getOutputStream();
-				responseClient.build().writeDelimitedTo(out);
-				out.flush();
+				try {
+					OutputStream out = clientSocket.getOutputStream();
+					responseClient.build().writeDelimitedTo(out);
+					out.flush();
+					
+				} catch(IOException i) {
+					System.out.println("Client not reachable...");
+					i.printStackTrace();
+				}
 			}
 		}
 		
@@ -208,6 +253,9 @@ public class Coordinator implements Runnable{
 			
 			KeyValue.ReadResponse rr = responseMsg.getReadResponse();
 			int id = rr.getId();
+			
+			int replies = repliesMap.get(id);
+			repliesMap.replace(id, replies+1);
 			
 			if(rr.getReadStatus()) {
 				int key = rr.getKeyval().getKey();
@@ -239,7 +287,11 @@ public class Coordinator implements Runnable{
 					readRepairMap.get(id).setReadRepairStatus(true);
 				}
 				
+				int cVal = readResponseMap.get(id);
+				readResponseMap.replace(id, cVal+1);
+				
 			}
+			//returned null for the key, means it does not have value
 			else {
 				int key = rr.getKeyval().getKey();
 				
@@ -248,17 +300,15 @@ public class Coordinator implements Runnable{
 					r.addServers(serverName, false);
 					r.setReadStatus(false);
 					readRepairMap.put(id,r);
+					readRepairMap.get(id).setReadStatus(false);
 				}
-				
+				readRepairMap.get(id).setReadStatus(false);
 				readRepairMap.get(id).addServers(serverName, false);
 				
 			}
-					
-			int cVal = readResponseMap.get(id);
-			readResponseMap.replace(id, cVal+1);
-						
+											
 			//IF total no. of response received is equal to consistency level, return to client
-			if(consistencyMap.get(id) == readResponseMap.get(id)){
+			if(consistencyMap.get(id) == readResponseMap.get(id) || repliesMap.get(id) == sc.getCountConnectedServers() && consistencyMap.get(id) != -1){
 				
 				System.out.println("Sending read response to client: key = " + readRepairMap.get(id).getKey());
 				consistencyMap.replace(id, -1);
@@ -283,14 +333,18 @@ public class Coordinator implements Runnable{
 				readResponse.setReadStatus(readRepairMap.get(id).getReadStatus());
 				
 				keyMessage.setReadResponse(readResponse.build());
-				
-				OutputStream out = clientSocket.getOutputStream();
-				keyMessage.build().writeDelimitedTo(out);
-				out.flush();
+				try {
+					OutputStream out = clientSocket.getOutputStream();
+					keyMessage.build().writeDelimitedTo(out);
+					out.flush();
+				} catch(IOException i) {
+					System.out.println("Client not reachable...");
+					i.printStackTrace();
+				}
 			}
 			
 			//All the responses received.. update inconsistant data in other servers if any exist
-			if(readResponseMap.get(id) == sc.getCountConnectedServers()) {
+			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
 				
 				//check if readRepair has to be done or not
 				if(readRepairMap.get(id).getReadRepairStatus() == true) {
@@ -315,7 +369,7 @@ public class Coordinator implements Runnable{
 						if(list.get(name) == false) {
 							try {
 								
-								System.out.println("Sending readRepair message to " + name + "  Key:  " + readRepairMap.get(id).getKey());
+							//	System.out.println("Sending readRepair message to " + name + "  Key:  " + readRepairMap.get(id).getKey());
 								Socket sock = new Socket(sc.serversIp.get(name), sc.serversPort.get(name));
 								OutputStream out = sock.getOutputStream();
 								keyMessage.build().writeDelimitedTo(out);
@@ -325,7 +379,7 @@ public class Coordinator implements Runnable{
 								
 							} catch(ConnectException e) {
 								
-								sc.addConnectedServers(name, false);
+								sc.addhintServers(name, false);
 								ArrayList<KeyValue.HintedHandoff> ls = null;
 								
 								if(sc.hintedHandoffMap.containsKey(serverName)) {

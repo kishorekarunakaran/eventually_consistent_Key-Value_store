@@ -1,6 +1,7 @@
 package keyValueStore.server;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,12 +16,12 @@ import keyValueStore.util.writeLog;
 public class ReplicaServer{
 	
 	public static void main(String[] args){
-
+		
 		if(args.length != 3){
 			System.out.println("Usage: ./server.sh <server name> <port> <config file>\n");
 			System.exit(0);
 		}
-		
+				
 		ServerContext sc = new ServerContext(args[0],Integer.parseInt(args[1]));
 		FileProcessor fp = new FileProcessor(args[2]);
 		sc.readFile(fp);
@@ -47,13 +48,57 @@ public class ReplicaServer{
 		catch(IOException i) {
 			System.out.println(i);
 		}
-
+	
 		try {
 			System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() +" " + + sc.port);
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while(true) {
+					KeyValue.KeyValueMessage.Builder km = KeyValue.KeyValueMessage.newBuilder();
+					km.setConnection(0);
+					km.setServerName(sc.getName());
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			//		System.out.println("pinging...");
+					for(String serverName : sc.serversIp.keySet()) {
+						try {
+							Socket socket = new Socket(sc.serversIp.get(serverName), sc.serversPort.get(serverName));
+							OutputStream out = socket.getOutputStream();
+							km.build().writeDelimitedTo(out);
+							sc.addConnectedServers(serverName, true);
+							out.flush();
+							out.close();
+							socket.close();
+												
+						} catch(ConnectException e) {
+					//		System.out.println(serverName + "not available");
+							sc.addConnectedServers(serverName, false);
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							sc.addConnectedServers(serverName, false);
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					
+					}
+				//	System.out.println("Connected Servers " + sc.getCountConnectedServers());
+				}
+			}
+		}).start();
 		
 		Socket request = null;
 		while(true) {
@@ -76,22 +121,18 @@ public class ReplicaServer{
 				//0 -> message from replica servers
 				if(keyValueMsg.getConnection() == 0){
 					
-					System.out.println("Received message from Server...");
+				//	System.out.println("Received message from Server...");
 					
 					String receiveServer = keyValueMsg.getServerName();
-					if(sc.containsServer(receiveServer) && sc.getServerStatus(receiveServer) == false) {
-						
-						System.out.println("Performing hinted handoff...");
-						sc.addConnectedServers(receiveServer, true);
-						sc.hintedHandoff(receiveServer);
-					}
 					
-					sc.addConnectedServers(receiveServer, true);
+				//	sc.addConnectedServers(receiveServer, true);
 					
 					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
 					OutputStream out = null;
 					
 					if(keyValueMsg.hasPutKey()) {
+						
+						hintedhandoff(receiveServer, sc);
 						
 						KeyValue.Put put = keyValueMsg.getPutKey();
 						
@@ -116,9 +157,7 @@ public class ReplicaServer{
 						keyMessage.build().writeDelimitedTo(out);
 						out.flush();
 						out.close();
-						in.close();
-						request.close();
-							
+						
 					}
 										
 					if(keyValueMsg.hasReadRepair()) {
@@ -132,9 +171,6 @@ public class ReplicaServer{
 						sc.store.put(key, keyStore);						
 						System.out.println("Read Repair done...");
 						sc.printStore();
-						
-						in.close();
-						request.close();
 					
 					}
 										
@@ -157,14 +193,12 @@ public class ReplicaServer{
 							sc.store.put(key, keyStore);
 							System.out.println("Hinted Handoff done...");
 							sc.printStore();
-						}
-										
-						in.close();
-						request.close();
-											
+						}					
 					}
 					
 					if(keyValueMsg.hasGetKey()) {
+						
+						hintedhandoff(receiveServer, sc);
 						
 						int key = keyValueMsg.getGetKey().getKey();
 						KeyValue.KeyValuePair keyStore = null;
@@ -185,22 +219,38 @@ public class ReplicaServer{
 							readResp.setReadStatus(false);
 						}
 						
+						System.out.println("Read response sent...");
 						//reply back to co-ordinator...
 						out = request.getOutputStream();
 						keyMessage.setReadResponse(readResp);
 						keyMessage.build().writeDelimitedTo(out);
 						out.flush();
 						out.close();
-						in.close();
-						request.close();
 						
-					}			
+					}	
+			
+					in.close();
+					request.close();	
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
 	}
 	
+	private static void hintedhandoff(String serverName,ServerContext sc) {
+		
+		String receiveServer = serverName;
+		if(sc.containshintServer(receiveServer) && sc.gethintStatus(receiveServer) == false) {
+			
+			if(sc.hintedHandoffMap.containsKey(receiveServer)) {
+				System.out.println("Performing hinted handoff...");
+				sc.addhintServers(receiveServer, true);
+				sc.hintedHandoff(receiveServer);
+			}
+		}
+		
+	}
 }

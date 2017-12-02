@@ -7,11 +7,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import keyValueStore.keyValue.KeyValue;
-import keyValueStore.keyValue.KeyValue.KeyValuePair;
-import keyValueStore.keyValue.KeyValue.Put;
 import keyValueStore.util.FileProcessor;
 
 public class ServerContext {
@@ -22,6 +19,7 @@ public class ServerContext {
 	
 	//maintains status of the replica servers value = true -> connected,false -> not connectedd
 	private HashMap<String,Boolean> connectedServers = new HashMap<String,Boolean>();
+	private HashMap<String,Boolean> hintServers = new HashMap<String,Boolean>();
 	
 	//map<serverNames,Ip> to store all ip addresses of servers
 	static HashMap<String,String> serversIp = new HashMap<String,String>();
@@ -90,16 +88,16 @@ public class ServerContext {
 		return connectedServers;
 	}
 	
-	public boolean containsServer(String name) {
+	public synchronized boolean containsServer(String name) {
 		return connectedServers.containsKey(name);
 	}
 	
-	public boolean getServerStatus(String name) {
+	public synchronized boolean getServerStatus(String name) {
 		return connectedServers.get(name);
 	}
 
     //Adds the state of the connected server...true -> connected, false -> not connected
-	public void addConnectedServers(String serverName, Boolean b) {
+	public synchronized void addConnectedServers(String serverName, Boolean b) {
 		
 		if(connectedServers.containsKey(serverName)) {
 			connectedServers.replace(serverName, b);
@@ -110,7 +108,7 @@ public class ServerContext {
 	}
 	
 	//returns the number of servers connected
-	public int getCountConnectedServers() {
+	public synchronized int getCountConnectedServers() {
 		int value = 0;
 		for(String name: connectedServers.keySet()) {
 			if(connectedServers.get(name) == true) {
@@ -120,6 +118,25 @@ public class ServerContext {
 		return value;
 	}
 
+	public synchronized boolean containshintServer(String name) {
+		return hintServers.containsKey(name);
+	}
+	
+	public synchronized boolean gethintStatus(String name) {
+		return hintServers.get(name);
+	}
+
+    //Adds the state of the connected server...true -> connected, false -> not connected
+	public synchronized void addhintServers(String serverName, Boolean b) {
+		
+		if(hintServers.containsKey(serverName)) {
+			hintServers.replace(serverName, b);
+		}
+		else {
+			hintServers.put(serverName, b);
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -160,5 +177,6 @@ public class ServerContext {
 				}
 		
 		}
+		hintedHandoffMap.remove(name);
 	}
 }
