@@ -271,7 +271,7 @@ public class Coordinator implements Runnable{
 				}
 				readRepairMap.get(id).setReadStatus(true);
 				//Checks if the received message has a timestamp greater than the one in readRepairMap for the id; if true replaces with the latest timestamp;
-				if(time >= readRepairMap.get(id).getTimestamp()) {
+				if(time > readRepairMap.get(id).getTimestamp()) {
 					readRepairMap.get(id).setId(id);
 					readRepairMap.get(id).setKey(key);
 					readRepairMap.get(id).setValue(value);
