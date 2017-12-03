@@ -345,8 +345,11 @@ public class Coordinator implements Runnable{
 					i.printStackTrace();
 				}
 			}
-			
-			startReadRepairInBackground(serverName, id);
+			//All the responses received.. update inconsistant data in other servers if any exist
+			//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
+			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
+				startReadRepairInBackground(serverName, id);
+			}
 		}
 	}
 	
@@ -356,9 +359,7 @@ public class Coordinator implements Runnable{
 	 * @param id - request,response id
 	 */
 	private void startReadRepairInBackground(String serverName, int id) {
-		//All the responses received.. update inconsistant data in other servers if any exist
-		//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
-		if(repliesMap.get(id) == sc.getCountConnectedServers()) {
+	
 			//System.out.println("status " + readRepairMap.get(id).getReadRepairStatus());
 			//check if readRepair has to be done or not
 			if(readRepairMap.get(id).getReadRepairStatus() == true) {
@@ -418,7 +419,6 @@ public class Coordinator implements Runnable{
 					}
 				}
 			}
-		}
 	}
 	
 	@Override
