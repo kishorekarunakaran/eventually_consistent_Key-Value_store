@@ -250,7 +250,7 @@ public class Coordinator implements Runnable{
 		}
 		
 		if(responseMsg.hasReadResponse()) {
-			
+			//System.out.println("----------------------Recevied read response from " + serverName);
 			KeyValue.ReadResponse rr = responseMsg.getReadResponse();
 			int id = rr.getId();
 			
@@ -271,7 +271,7 @@ public class Coordinator implements Runnable{
 				}
 				readRepairMap.get(id).setReadStatus(true);
 				//Checks if the received message has a timestamp greater than the one in readRepairMap for the id; if true replaces with the latest timestamp;
-				if(time > readRepairMap.get(id).getTimestamp()) {
+				if(time >= readRepairMap.get(id).getTimestamp()) {
 					readRepairMap.get(id).setId(id);
 					readRepairMap.get(id).setKey(key);
 					readRepairMap.get(id).setValue(value);
@@ -283,6 +283,8 @@ public class Coordinator implements Runnable{
 				
 				//if received message has a timestamp lesser than the one in readRepairMap, then the corresponding server has to be sent the updated key-value pair
 				if(time < readRepairMap.get(id).getTimestamp()) {
+					//System.out.println("Read Repair shud be performed on  " + serverName);
+
 					readRepairMap.get(id).addServers(serverName, false);
 					readRepairMap.get(id).setReadRepairStatus(true);
 				}
@@ -303,14 +305,15 @@ public class Coordinator implements Runnable{
 					readRepairMap.get(id).setReadStatus(false);
 				}
 				readRepairMap.get(id).setReadStatus(false);
+				
+				//System.out.println("Read Repair shud be performed on(empty response) " + serverName);
 				readRepairMap.get(id).addServers(serverName, false);
 				
 			}
 											
 			//IF total no. of response received is equal to consistency level, return to client
 			if(consistencyMap.get(id) == readResponseMap.get(id) || repliesMap.get(id) == sc.getCountConnectedServers() && consistencyMap.get(id) != -1){
-				
-				System.out.println("Sending read response to client: key = " + readRepairMap.get(id).getKey());
+				//System.out.println("Sending read response to client: key = " + readRepairMap.get(id).getKey());
 				consistencyMap.replace(id, -1);
 				
 				//send response to client
@@ -343,64 +346,74 @@ public class Coordinator implements Runnable{
 				}
 			}
 			
-			//All the responses received.. update inconsistant data in other servers if any exist
-			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
+			startReadRepairInBackground(serverName, id);
+		}
+	}
+	
+	/**
+	 * This function starts read repair in background if any inconsistent data
+	 * @param serverName
+	 * @param id - request,response id
+	 */
+	private void startReadRepairInBackground(String serverName, int id) {
+		//All the responses received.. update inconsistant data in other servers if any exist
+		//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
+		if(repliesMap.get(id) == sc.getCountConnectedServers()) {
+			//System.out.println("status " + readRepairMap.get(id).getReadRepairStatus());
+			//check if readRepair has to be done or not
+			if(readRepairMap.get(id).getReadRepairStatus() == true) {
 				
-				//check if readRepair has to be done or not
-				if(readRepairMap.get(id).getReadRepairStatus() == true) {
-					
-					//list of server names that needs to be updated
-					HashMap<String,Boolean> list = readRepairMap.get(id).getServers();
-					
-					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
-				    KeyValue.ReadRepair.Builder readRepairMsg = KeyValue.ReadRepair.newBuilder();					
-					KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();
-					
-					keyStore.setKey(readRepairMap.get(id).getKey());
-					keyStore.setValue(readRepairMap.get(id).getValue());		
-					keyStore.setTime(readRepairMap.get(id).getTimestamp());
-					
-					readRepairMsg.setKeyval(keyStore.build());
-				    readRepairMsg.setId(id);
-				    
-					keyMessage.setReadRepair(readRepairMsg.build());
-					
-					for(String name : list.keySet()) {
-						if(list.get(name) == false) {
-							try {
-								
-							//	System.out.println("Sending readRepair message to " + name + "  Key:  " + readRepairMap.get(id).getKey());
-								Socket sock = new Socket(sc.serversIp.get(name), sc.serversPort.get(name));
-								OutputStream out = sock.getOutputStream();
-								keyMessage.build().writeDelimitedTo(out);
-								out.flush();
-								out.close();
-								sock.close();
-								
-							} catch(ConnectException e) {
-								
-								sc.addhintServers(name, false);
-								ArrayList<KeyValue.HintedHandoff> ls = null;
-								
-								if(sc.hintedHandoffMap.containsKey(serverName)) {
-									ls = sc.hintedHandoffMap.get(serverName);
-								}
-								else {
-									ls = new ArrayList<KeyValue.HintedHandoff>();
-								}
-								
-								KeyValue.HintedHandoff.Builder hh = KeyValue.HintedHandoff.newBuilder();
-								hh.setKeyval(keyMessage.getReadRepair().getKeyval());
-								hh.setId(keyMessage.getReadRepair().getId());
-								
-								ls.add(hh.build());
-								sc.hintedHandoffMap.put(serverName, ls);
-								
-							} catch (UnknownHostException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
+				//list of server names that needs to be updated
+				HashMap<String,Boolean> list = readRepairMap.get(id).getServers();
+				
+				KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+			    KeyValue.ReadRepair.Builder readRepairMsg = KeyValue.ReadRepair.newBuilder();					
+				KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();
+				
+				keyStore.setKey(readRepairMap.get(id).getKey());
+				keyStore.setValue(readRepairMap.get(id).getValue());		
+				keyStore.setTime(readRepairMap.get(id).getTimestamp());
+				
+				readRepairMsg.setKeyval(keyStore.build());
+			    readRepairMsg.setId(id);
+			    
+				keyMessage.setReadRepair(readRepairMsg.build());
+				
+				for(String name : list.keySet()) {
+					if(list.get(name) == false) {
+						try {
+							
+							System.out.println("Sending readRepair message to " + name + "  Key:  " + readRepairMap.get(id).getKey());
+							Socket sock = new Socket(sc.serversIp.get(name), sc.serversPort.get(name));
+							OutputStream out = sock.getOutputStream();
+							keyMessage.build().writeDelimitedTo(out);
+							out.flush();
+							out.close();
+							sock.close();
+							
+						} catch(ConnectException e) {
+							
+							sc.addhintServers(name, false);
+							ArrayList<KeyValue.HintedHandoff> ls = null;
+							
+							if(sc.hintedHandoffMap.containsKey(serverName)) {
+								ls = sc.hintedHandoffMap.get(serverName);
 							}
+							else {
+								ls = new ArrayList<KeyValue.HintedHandoff>();
+							}
+							
+							KeyValue.HintedHandoff.Builder hh = KeyValue.HintedHandoff.newBuilder();
+							hh.setKeyval(keyMessage.getReadRepair().getKeyval());
+							hh.setId(keyMessage.getReadRepair().getId());
+							
+							ls.add(hh.build());
+							sc.hintedHandoffMap.put(serverName, ls);
+							
+						} catch (UnknownHostException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
 					}
 				}
