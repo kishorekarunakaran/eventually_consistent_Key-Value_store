@@ -1,4 +1,4 @@
-LIB_PATH=/home/suri/Desktop/Github/eventually_consistent_Key-Value_store/keyValueStore/lib/protobuf-java-3.4.0.jar
+LIB_PATH=/home/phao3/protobuf/protobuf-3.4.0/java/core/target/protobuf.jar
 
 all: clean
 	mkdir bin
