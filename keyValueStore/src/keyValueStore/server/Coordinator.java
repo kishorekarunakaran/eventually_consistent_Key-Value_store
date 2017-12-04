@@ -79,7 +79,7 @@ public class Coordinator implements Runnable{
 				KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
 				excep.setKey(putServer.getKeyval().getKey());
 				excep.setMethod("PUT");
-				excep.setExceptionMessage("Number of online servers is less than the consistency level");
+				excep.setExceptionMessage("Number of available replica servers is less than the consistency level");
 				keyMessage.setException(excep.build());
 				try {
 					OutputStream out = clientSocket.getOutputStream();
@@ -348,7 +348,14 @@ public class Coordinator implements Runnable{
 			//All the responses received.. update inconsistant data in other servers if any exist
 			//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
 			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
-				startReadRepairInBackground(serverName, id);
+				
+				Thread readRepairThread = new Thread() {
+					public void run() {
+						startReadRepairInBackground(serverName, id);
+					}
+				};
+				
+				readRepairThread.start();
 			}
 		}
 	}
@@ -363,7 +370,8 @@ public class Coordinator implements Runnable{
 			//System.out.println("status " + readRepairMap.get(id).getReadRepairStatus());
 			//check if readRepair has to be done or not
 			if(readRepairMap.get(id).getReadRepairStatus() == true) {
-				
+				System.out.println("Read repair thread started.!");
+
 				//list of server names that needs to be updated
 				HashMap<String,Boolean> list = readRepairMap.get(id).getServers();
 				

@@ -19,6 +19,7 @@ public class ServerContext {
 	
 	//maintains status of the replica servers value = true -> connected,false -> not connectedd
 	private HashMap<String,Boolean> connectedServers = new HashMap<String,Boolean>();
+	
 	private HashMap<String,Boolean> hintServers = new HashMap<String,Boolean>();
 	
 	//map<serverNames,Ip> to store all ip addresses of servers
@@ -82,6 +83,7 @@ public class ServerContext {
 		for(int key: store.keySet()) {		
 			System.out.println(store.get(key).getKey() + "   " + store.get(key).getValue() + "   " + store.get(key).getTime());
 		}
+		System.out.println();
 	}
 
 	public HashMap<String,Boolean> getConnectedServers() {

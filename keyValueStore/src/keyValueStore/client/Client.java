@@ -90,6 +90,11 @@ public class Client{
 			if(splitValue[0].equalsIgnoreCase("get")) {
 				
 				int key = Integer.parseInt(splitValue[1]);
+				
+				if(key<0 || key>255) {
+					System.out.println("Key should be in the range 0-255");
+					continue;
+				}
 				int clevel = Integer.parseInt(splitValue[2]);
 				
 				KeyValue.Get.Builder getMethod = KeyValue.Get.newBuilder();
@@ -103,6 +108,11 @@ public class Client{
 			if(splitValue[0].equalsIgnoreCase("put")) {
 				
 				int key = Integer.parseInt(splitValue[1]);
+				if(key<0 || key>255) {
+					System.out.println("Key should be in the range 0-255");
+					continue;
+				}
+				
 				String input = splitValue[2];
 				int clevel = Integer.parseInt(splitValue[3]);
 				
