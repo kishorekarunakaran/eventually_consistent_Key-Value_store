@@ -1,2 +1,0 @@
-Tasks::
-1. Handle coordinator failure and client crashes
