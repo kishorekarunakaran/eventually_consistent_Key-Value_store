@@ -17,15 +17,19 @@ public class ReplicaServer{
 	
 	public static void main(String[] args){
 		
-		if(args.length != 3){
+		if(args.length != 4){
 			System.out.println("Usage: ./server.sh <server name> <port> <config file>\n");
 			System.exit(0);
 		}
 				
 		ServerContext sc = new ServerContext(args[0],Integer.parseInt(args[1]));
 		FileProcessor fp = new FileProcessor(args[2]);
+		int flag = Integer.parseInt(args[3]);
+		
 		sc.readFile(fp);
 		fp.close();
+		
+		sc.setFlag(flag);
 		
 		//log file, path = /log/servername.log
 		String path = "log/" + sc.getName() +".log";			
@@ -132,8 +136,9 @@ public class ReplicaServer{
 					
 					if(keyValueMsg.hasPutKey()) {
 						
-						hintedhandoff(receiveServer, sc);
-						
+						if(sc.getFlag() == 0) {
+							hintedhandoff(receiveServer, sc);
+						}
 						KeyValue.Put put = keyValueMsg.getPutKey();
 						
 					//	Random rand = new Random();
@@ -198,7 +203,9 @@ public class ReplicaServer{
 					
 					if(keyValueMsg.hasGetKey()) {
 						
-						hintedhandoff(receiveServer, sc);
+						if(sc.getFlag() == 0) {
+							hintedhandoff(receiveServer, sc);
+						}
 						
 						int key = keyValueMsg.getGetKey().getKey();
 						KeyValue.KeyValuePair keyStore = null;

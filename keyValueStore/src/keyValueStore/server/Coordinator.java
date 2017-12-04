@@ -79,7 +79,7 @@ public class Coordinator implements Runnable{
 				KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
 				excep.setKey(putServer.getKeyval().getKey());
 				excep.setMethod("PUT");
-				excep.setExceptionMessage("Number of available replica servers is less than the consistency level");
+				excep.setExceptionMessage("Number of online servers is less than the consistency level");
 				keyMessage.setException(excep.build());
 				try {
 					OutputStream out = clientSocket.getOutputStream();
@@ -244,7 +244,7 @@ public class Coordinator implements Runnable{
 					
 				} catch(IOException i) {
 					System.out.println("Client not reachable...");
-					i.printStackTrace();
+					//i.printStackTrace();
 				}
 			}
 		}
@@ -300,11 +300,8 @@ public class Coordinator implements Runnable{
 				if(!readRepairMap.containsKey(id)) {
 					ReadRepair r = new ReadRepair(id, key, null, 0);
 					r.addServers(serverName, false);
-					r.setReadStatus(false);
-					readRepairMap.put(id,r);
-					readRepairMap.get(id).setReadStatus(false);
+					readRepairMap.put(id,r);			
 				}
-				readRepairMap.get(id).setReadStatus(false);
 				
 				//System.out.println("Read Repair shud be performed on(empty response) " + serverName);
 				readRepairMap.get(id).addServers(serverName, false);
@@ -342,20 +339,33 @@ public class Coordinator implements Runnable{
 					out.flush();
 				} catch(IOException i) {
 					System.out.println("Client not reachable...");
-					i.printStackTrace();
+					//i.printStackTrace();
 				}
 			}
 			//All the responses received.. update inconsistant data in other servers if any exist
 			//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
 			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
-				
-				Thread readRepairThread = new Thread() {
-					public void run() {
-						startReadRepairInBackground(serverName, id);
+				if(readResponseMap.get(id) < consistencyMap.get(id)) {
+					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+					KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
+					excep.setKey(readRepairMap.get(id).getKey());
+					excep.setMethod("GET");
+					excep.setExceptionMessage("Number of online servers is less than the consistency level");
+					keyMessage.setException(excep.build());
+					try {
+						OutputStream out = clientSocket.getOutputStream();
+						keyMessage.build().writeDelimitedTo(out);
+						out.flush();
+						
+					} catch(IOException i) {
+						System.out.println("Client not reachable...");
+						i.printStackTrace();
 					}
-				};
-				
-				readRepairThread.start();
+					
+				}
+				if(sc.getFlag() == 1) {
+					startReadRepairInBackground(serverName, id);
+				}
 			}
 		}
 	}
@@ -370,8 +380,7 @@ public class Coordinator implements Runnable{
 			//System.out.println("status " + readRepairMap.get(id).getReadRepairStatus());
 			//check if readRepair has to be done or not
 			if(readRepairMap.get(id).getReadRepairStatus() == true) {
-				System.out.println("Read repair thread started.!");
-
+				
 				//list of server names that needs to be updated
 				HashMap<String,Boolean> list = readRepairMap.get(id).getServers();
 				

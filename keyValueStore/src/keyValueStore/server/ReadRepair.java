@@ -80,4 +80,5 @@ public class ReadRepair {
 	public void setReadStatus(Boolean readStatus) {
 		this.readStatus = readStatus;
 	}
+
 }
