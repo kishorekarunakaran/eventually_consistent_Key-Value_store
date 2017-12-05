@@ -311,6 +311,7 @@ public class Coordinator implements Runnable{
 			//All the responses received.. update inconsistant data in other servers if any exist
 			//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
 			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
+			  if(readRepairMap.get(id).getReadStatus() == true) {
 				if(readRepairMap.get(id).checkConsistency(consistencyMap.get(id)) == false) {
 					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
 					KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
@@ -333,17 +334,10 @@ public class Coordinator implements Runnable{
 					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
 					KeyValue.ReadResponse.Builder readResponse = KeyValue.ReadResponse.newBuilder();				
 					KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();
-					
-					if(readRepairMap.get(id).getReadStatus()) {
-						keyStore.setKey(readRepairMap.get(id).getKey());
-						keyStore.setValue(readRepairMap.get(id).getValue());		
-						keyStore.setTime(readRepairMap.get(id).getTimestamp());
-						
-					}
-					else {
-						keyStore.setKey(readRepairMap.get(id).getKey());
-					}
-					
+				
+					keyStore.setKey(readRepairMap.get(id).getKey());
+					keyStore.setValue(readRepairMap.get(id).getValue());		
+					keyStore.setTime(readRepairMap.get(id).getTimestamp());
 					readResponse.setKeyval(keyStore.build());
 					readResponse.setId(readRepairMap.get(id).getId());
 					readResponse.setReadStatus(readRepairMap.get(id).getReadStatus());
@@ -358,9 +352,31 @@ public class Coordinator implements Runnable{
 						//i.printStackTrace();
 					}				
 				}
-				if(sc.getFlag() == 1) {
-					startReadRepairInBackground(serverName, id);
-				}
+			  }
+			  else if(readRepairMap.get(id).getReadStatus() == false){
+				  KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+					KeyValue.ReadResponse.Builder readResponse = KeyValue.ReadResponse.newBuilder();				
+					KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();
+				
+					keyStore.setKey(readRepairMap.get(id).getKey());
+					readResponse.setKeyval(keyStore.build());
+					readResponse.setId(readRepairMap.get(id).getId());
+					readResponse.setReadStatus(readRepairMap.get(id).getReadStatus());
+					
+					keyMessage.setReadResponse(readResponse.build());
+					try {
+						OutputStream out = clientSocket.getOutputStream();
+						keyMessage.build().writeDelimitedTo(out);
+						out.flush();
+					} catch(IOException i) {
+						System.out.println("Client not reachable...");
+						//i.printStackTrace();
+					}				
+			  }
+				
+			  if(sc.getFlag() == 1) {
+				startReadRepairInBackground(serverName, id);
+			  }
 			}
 		}
 	}
