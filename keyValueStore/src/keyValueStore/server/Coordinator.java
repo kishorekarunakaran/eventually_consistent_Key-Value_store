@@ -390,7 +390,7 @@ public class Coordinator implements Runnable{
 	
 			//System.out.println("status " + readRepairMap.get(id).getReadRepairStatus());
 			//check if readRepair has to be done or not
-			if(readRepairMap.get(id).getReadRepairStatus() == true) {
+			if(readRepairMap.get(id).getReadStatus() == true) {
 				
 				//list of server names that needs to be updated
 				HashMap<String,Boolean> list = readRepairMap.get(id).getServers();
