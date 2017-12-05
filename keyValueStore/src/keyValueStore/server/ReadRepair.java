@@ -87,10 +87,10 @@ public class ReadRepair {
 		for(String name: serversTimestamp.keySet()) {
 			if(serversTimestamp.get(name) == timestamp) {
 				value++;
+				if(value == con) {
+					return true;
+				}
 			}
-		}
-		if(value == con) {
-			return true;
 		}
 		return false;
 	}
