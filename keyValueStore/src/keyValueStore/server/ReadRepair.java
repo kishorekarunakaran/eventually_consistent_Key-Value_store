@@ -9,6 +9,7 @@ public class ReadRepair {
 	private String value = null;
 	private long timestamp = 0;
 	private HashMap<String,Boolean> servers = new HashMap<String,Boolean>();
+	public HashMap<String,Long> serversTimestamp = new HashMap<String,Long>();
 	private Boolean readRepairStatus = false;
 	private Boolean readStatus = false;
 	
@@ -79,6 +80,19 @@ public class ReadRepair {
 
 	public void setReadStatus(Boolean readStatus) {
 		this.readStatus = readStatus;
+	}
+	
+	public Boolean checkConsistency(int con) {
+		int value = 0;
+		for(String name: serversTimestamp.keySet()) {
+			if(serversTimestamp.get(name) == timestamp) {
+				value++;
+			}
+		}
+		if(value == con) {
+			return true;
+		}
+		return false;
 	}
 
 }
