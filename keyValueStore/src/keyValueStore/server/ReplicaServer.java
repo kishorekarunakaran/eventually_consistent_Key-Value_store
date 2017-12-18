@@ -18,7 +18,7 @@ public class ReplicaServer{
 	public static void main(String[] args){
 		
 		if(args.length != 4){
-			System.out.println("Usage: ./server.sh <server name> <port> <config file>\n");
+			System.out.println("Usage: ./server.sh <server name> <port> <config file> <read repair:1 or hinted handoff:0>\n");
 			System.exit(0);
 		}
 				

@@ -292,45 +292,8 @@ public class Coordinator implements Runnable{
 				int cVal = readResponseMap.get(id);
 				readResponseMap.replace(id, cVal+1);
 				
-			}
-			//returned null for the key, means it does not have value
-			else {
-				int key = rr.getKeyval().getKey();
-				
-				if(!readRepairMap.containsKey(id)) {
-					ReadRepair r = new ReadRepair(id, key, null, 0);
-					r.addServers(serverName, false);
-					readRepairMap.put(id,r);			
-				}
-				
-				//System.out.println("Read Repair shud be performed on(empty response) " + serverName);
-				readRepairMap.get(id).addServers(serverName, false);
-				
-			}
-											
-			//All the responses received.. update inconsistant data in other servers if any exist
-			//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
-			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
-			  if(readRepairMap.get(id).getReadStatus() == true) {
-				if(readRepairMap.get(id).checkConsistency(consistencyMap.get(id)) == false) {
-					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
-					KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
-					excep.setKey(readRepairMap.get(id).getKey());
-					excep.setMethod("GET");
-					excep.setExceptionMessage("Consistency not satisfied");
-					keyMessage.setException(excep.build());
-					try {
-						OutputStream out = clientSocket.getOutputStream();
-						keyMessage.build().writeDelimitedTo(out);
-						out.flush();
-						
-					} catch(IOException i) {
-						System.out.println("Client not reachable...");
-						i.printStackTrace();
-					}
-					
-				}
-				else {
+				if(readResponseMap.get(id) == consistencyMap.get(id)) {
+					consistencyMap.replace(id, -1);
 					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
 					KeyValue.ReadResponse.Builder readResponse = KeyValue.ReadResponse.newBuilder();				
 					KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();
@@ -350,10 +313,47 @@ public class Coordinator implements Runnable{
 					} catch(IOException i) {
 						System.out.println("Client not reachable...");
 						//i.printStackTrace();
-					}				
+					}			
 				}
-			  }
-			  else if(readRepairMap.get(id).getReadStatus() == false){
+				
+			}
+			//returned null for the key, means it does not have value
+			else {
+				int key = rr.getKeyval().getKey();
+				
+				if(!readRepairMap.containsKey(id)) {
+					ReadRepair r = new ReadRepair(id, key, null, 0);
+					r.addServers(serverName, false);
+					readRepairMap.put(id,r);			
+				}
+				
+				//System.out.println("Read Repair shud be performed on(empty response) " + serverName);
+				readRepairMap.get(id).addServers(serverName, false);
+				
+			}
+											
+			//All the responses received.. update inconsistant data in other servers if any exist
+			//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
+			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
+				if(consistencyMap.get(id) != -1 && readRepairMap.get(id).checkConsistency(consistencyMap.get(id)) == false) {
+					KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
+					KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
+					excep.setKey(readRepairMap.get(id).getKey());
+					excep.setMethod("GET");
+					excep.setExceptionMessage("Consistency not satisfied");
+					keyMessage.setException(excep.build());
+					try {
+						OutputStream out = clientSocket.getOutputStream();
+						keyMessage.build().writeDelimitedTo(out);
+						out.flush();
+						
+					} catch(IOException i) {
+						System.out.println("Client not reachable...");
+						i.printStackTrace();
+					}
+					
+				}
+				else if(readRepairMap.get(id).getReadStatus() == false){
 				  KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
 					KeyValue.ReadResponse.Builder readResponse = KeyValue.ReadResponse.newBuilder();				
 					KeyValue.KeyValuePair.Builder keyStore = KeyValue.KeyValuePair.newBuilder();
