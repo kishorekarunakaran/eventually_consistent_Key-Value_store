@@ -13,6 +13,12 @@ import keyValueStore.keyValue.KeyValue;
 import keyValueStore.util.FileProcessor;
 import keyValueStore.util.writeLog;
 
+/**
+* 
+* @author  Surendra kumar Koneti
+* @since   2017-11-21
+*/
+
 public class ReplicaServer{
 	
 	public static void main(String[] args){
@@ -24,18 +30,19 @@ public class ReplicaServer{
 				
 		ServerContext sc = new ServerContext(args[0],Integer.parseInt(args[1]));
 		FileProcessor fp = new FileProcessor(args[2]);
+		
+		//user input, to use read repair or hinted hand-off.
 		int flag = Integer.parseInt(args[3]);
 		
 		sc.readFile(fp);
 		fp.close();
-		
 		sc.setFlag(flag);
 		
-		//log file, path = /log/servername.log
+		//log file, path = /log/servername.log.
 		String path = "log/" + sc.getName() +".log";			
 		FileProcessor readLog = new FileProcessor(path);
 		
-		//checks if the log file exists or not.. true -> reads log file, false -> file doesn't exist
+		//checks if the log file exists or not.. true -> reads log file, false -> file doesn't exist.
 		if(readLog.isReadable()) {
 		
 			sc.readLog(readLog);
@@ -43,20 +50,19 @@ public class ReplicaServer{
 			sc.printStore();
 		}
 		
-		//wrireLog class, writes to log..
 		writeLog wrlog = new writeLog(path);
 		
 		try {
-			sc.server = new ServerSocket(sc.port);
+			ServerContext.server = new ServerSocket(ServerContext.port);
 		}
 		catch(IOException i) {
 			System.out.println(i);
 		}
 	
 		try {
-			System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() +" " + + sc.port);
-		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
+			System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() +" " + + ServerContext.port);
+		} 
+		catch(UnknownHostException e1) {
 			e1.printStackTrace();
 		}
 		
@@ -72,13 +78,13 @@ public class ReplicaServer{
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
 			//		System.out.println("pinging...");
-					for(String serverName : sc.serversIp.keySet()) {
+					for(String serverName : ServerContext.serversIp.keySet()) {
 						try {
-							Socket socket = new Socket(sc.serversIp.get(serverName), sc.serversPort.get(serverName));
+							Socket socket = new Socket(ServerContext.serversIp.get(serverName), ServerContext.serversPort.get(serverName));
 							OutputStream out = socket.getOutputStream();
 							km.build().writeDelimitedTo(out);
 							sc.addConnectedServers(serverName, true);
@@ -89,12 +95,10 @@ public class ReplicaServer{
 						} catch(ConnectException e) {
 					//		System.out.println(serverName + "not available");
 							sc.addConnectedServers(serverName, false);
-						} catch (UnknownHostException e) {
-							// TODO Auto-generated catch block
+						} catch(UnknownHostException e) {
 							e.printStackTrace();
-						} catch (IOException e) {
+						} catch(IOException e) {
 							sc.addConnectedServers(serverName, false);
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					
@@ -105,15 +109,16 @@ public class ReplicaServer{
 		}).start();
 		
 		Socket request = null;
+		
 		while(true) {
 			try {
 				
-				request = sc.server.accept();
+				request = ServerContext.server.accept();
 				
 				InputStream in = request.getInputStream();
 				KeyValue.KeyValueMessage keyValueMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
 				
-				//1 -> message from client
+				//Connection -> 1, message from client.
 				if(keyValueMsg.getConnection() == 1) {
 					
 					System.out.println("Received message from Client...");
@@ -122,7 +127,7 @@ public class ReplicaServer{
 					
 				}
 				
-				//0 -> message from replica servers
+				//Connection -> 0, message from replica servers.
 				if(keyValueMsg.getConnection() == 0){
 					
 				//	System.out.println("Received message from Server...");
@@ -140,14 +145,11 @@ public class ReplicaServer{
 							hintedhandoff(receiveServer, sc);
 						}
 						KeyValue.Put put = keyValueMsg.getPutKey();
-						
-					//	Random rand = new Random();
-					//	int randomNum = rand.nextInt((5 - 1)) + 1;
 						KeyValue.KeyValuePair keyStore = put.getKeyval();
 
 						String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
 						wrlog.writeToFile(writeAheadLog);						
-						sc.store.put(keyStore.getKey(), keyStore);							
+						ServerContext.store.put(keyStore.getKey(), keyStore);							
 						System.out.println("Message written to keyStore..!!\n");
 						sc.printStore();
 							
@@ -156,7 +158,7 @@ public class ReplicaServer{
 						wr.setId(put.getId());
 						wr.setWriteReply(true);
 						
-						//reply back to co-ordinator after message written to keystore
+						//reply back to Coordinator after message written to KeyStore.
 						out = request.getOutputStream();
 						keyMessage.setWriteResponse(wr.build());
 						keyMessage.build().writeDelimitedTo(out);
@@ -164,7 +166,8 @@ public class ReplicaServer{
 						out.close();
 						
 					}
-										
+					
+					//Read Repair message, update the KeyValue store.	
 					if(keyValueMsg.hasReadRepair()) {
 						
 						KeyValue.ReadRepair rr = keyValueMsg.getReadRepair();
@@ -173,29 +176,31 @@ public class ReplicaServer{
 						
 						String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
 						wrlog.writeToFile(writeAheadLog);
-						sc.store.put(key, keyStore);						
+						ServerContext.store.put(key, keyStore);						
 						System.out.println("Read Repair done...");
 						sc.printStore();
 					
 					}
-										
+					
+					//Hinted Hand-off message, checks the TimeStamp and updates the KeyValue store.
 					if(keyValueMsg.hasHintedHandoff()) {
 						
 						KeyValue.HintedHandoff hh = keyValueMsg.getHintedHandoff();
 						KeyValue.KeyValuePair keyStore = hh.getKeyval();
 						int key = keyStore.getKey();
 						
-						if(sc.store.containsKey(key) && keyStore.getTime() >= sc.store.get(key).getTime()) {
+						
+						if(ServerContext.store.containsKey(key) && keyStore.getTime() >= ServerContext.store.get(key).getTime()) {
 							String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
 							wrlog.writeToFile(writeAheadLog);
-							sc.store.replace(key, keyStore);
+							ServerContext.store.replace(key, keyStore);
 							System.out.println("Hinted Handoff done...");
 							sc.printStore();
 						}
 						else {
 							String writeAheadLog = keyStore.getKey() + " " + keyStore.getValue() + " " + keyStore.getTime();
 							wrlog.writeToFile(writeAheadLog);
-							sc.store.put(key, keyStore);
+							ServerContext.store.put(key, keyStore);
 							System.out.println("Hinted Handoff done...");
 							sc.printStore();
 						}					
@@ -211,8 +216,8 @@ public class ReplicaServer{
 						KeyValue.KeyValuePair keyStore = null;
 						KeyValue.ReadResponse.Builder readResp = KeyValue.ReadResponse.newBuilder();
 						
-						if(sc.store.containsKey(key)) {
-							keyStore = sc.store.get(key);
+						if(ServerContext.store.containsKey(key)) {
+							keyStore = ServerContext.store.get(key);
 							readResp.setKeyval(keyStore);
 							readResp.setId(keyValueMsg.getGetKey().getId());
 							readResp.setReadStatus(true);
@@ -227,7 +232,7 @@ public class ReplicaServer{
 						}
 						
 						System.out.println("Read response sent...");
-						//reply back to co-ordinator...
+						//reply back to Coordinator.
 						out = request.getOutputStream();
 						keyMessage.setReadResponse(readResp);
 						keyMessage.build().writeDelimitedTo(out);
@@ -240,14 +245,18 @@ public class ReplicaServer{
 					request.close();	
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
 	}
 	
-	private static void hintedhandoff(String serverName,ServerContext sc) {
+	/**
+	 * This method performs Hinted Hand-off when this server comes to know that a previously connected server is back live.
+	 * @param serverName Name of the Server
+	 * @param sc ServerContext instance 
+	 */
+	private static void hintedhandoff(String serverName, ServerContext sc) {
 		
 		String receiveServer = serverName;
 		if(sc.containshintServer(receiveServer) && sc.gethintStatus(receiveServer) == false) {

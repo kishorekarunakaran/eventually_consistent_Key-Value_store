@@ -8,9 +8,10 @@ import java.io.File;
 
 /**
 * 
-*
 * @author  Surendra kumar Koneti
 * @since   2017-11-21
+* Description: This program reads the file and returns line by line to the instance, 
+*              checks if the file can be read or not.
 */
 
 public class FileProcessor{
@@ -20,6 +21,9 @@ public class FileProcessor{
 	private int lineIndex = 0;
 	private boolean readable = true;
 	
+	/**
+	 * @param fileName the name of the file to read
+	 */
 	public FileProcessor(String fileName){
 	
 		File check = new File(fileName);
@@ -35,16 +39,15 @@ public class FileProcessor{
 			}
 		}
 		else {
-			//sets readable = false if the file doesn't exist..
+			//sets readable to false if the file does not exist.
 			setReadable(false);
 		}
 	}
 
 	/**
-	* Reads target file and returns line by line
- 	* @return line	
+	*  Reads target file and returns line by line.
+ 	*  @return line	
 	*/
-
 	public String readLine(){
 		String currentLine;
 		try{
@@ -61,26 +64,31 @@ public class FileProcessor{
 		return null;
 	}
 
-    	/**
-     	* Closes target file
-     	*/
-
-    	public void close() {
-			try{
-        	    	fileRead.close();
-			}
-			catch(IOException i){
-				System.err.println("close failed");
-           		 System.exit(0); 
-			}
-    	}
-
-		public boolean isReadable() {
-			return readable;
+	/**
+	 * This method closes the target file.
+	 */
+    public void close() {
+		try{
+       	    	fileRead.close();
 		}
-
-		public void setReadable(boolean readable) {
-			this.readable = readable;
+		catch(IOException i){
+			System.err.println("close failed");
+         	System.exit(0); 
 		}
+    }
+    
+    /**
+     * @return readable tells if the file can be read or not
+     */
+	public boolean isReadable() {
+		return readable;
+	}
+	
+	/**
+	 * @param readable sets the state of the file, if its readable or not
+	 */
+	public void setReadable(boolean readable) {
+		this.readable = readable;
+	}
 }
 	

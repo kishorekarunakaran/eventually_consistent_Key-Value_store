@@ -3,16 +3,32 @@ package keyValueStore.client;
 import java.net.Socket;
 import keyValueStore.util.FileProcessor;
 
+/**
+* 
+* @author  Surendra kumar Koneti
+* @since   2017-11-22
+*/
+
 public class ClientContext {
 	
 	private String coordinator = null;
 	static String coIp = null;
 	static int coPort = 0;
 	static Socket sock = null;
+	
+	/**
+	 * 
+	 * @param coor user defined value, the coordinator to which the client needs to communicate
+	 */
 
 	public ClientContext(String coor) {
 		coordinator = coor;
 	}
+	
+	/**
+	 * 
+	 * @param fp util.fileProcessor instance
+	 */
 	
 	public void readFile(FileProcessor fp) {
 		

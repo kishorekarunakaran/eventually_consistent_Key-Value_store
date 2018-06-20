@@ -6,10 +6,15 @@ import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+/**
+* 
+* @author  Surendra kumar Koneti
+* @since   2017-11-21
+*/
 
 import keyValueStore.keyValue.KeyValue;
 
@@ -19,18 +24,23 @@ public class Coordinator implements Runnable{
 	private ServerContext sc = null;
 	private KeyValue.KeyValueMessage keyValueMsg = null;
 	
-	//Map<Id,Consistency> 
+	//HashMap<Id,Consistency>
 	private HashMap<Integer,Integer> consistencyMap = new HashMap<Integer,Integer>();
 	
-	//Map<Id,response received>
+	//HashMap<Id,response received>
 	private HashMap<Integer, Integer> readResponseMap = new HashMap<Integer,Integer>();
 	private HashMap<Integer, Integer> repliesMap = new HashMap<Integer,Integer>();
 	private HashMap<Integer, Integer> writeResponseMap = new HashMap<Integer,Integer>();
 	
-	//Map<Id, latest key-value pair>
+	//HashMap<Id, latest key-value pair>
 	private HashMap<Integer,ReadRepair> readRepairMap = new HashMap<Integer,ReadRepair>();
 
-	//Constructor
+	/**
+	 * 
+	 * @param in Socket instance of the server
+	 * @param scIn ServerContext instance of the server
+	 * @param msgIn First message sent to the server
+	 */
 	public Coordinator(Socket in, ServerContext scIn, KeyValue.KeyValueMessage msgIn) {
 		clientSocket = in;
 		sc = scIn;
@@ -40,13 +50,13 @@ public class Coordinator implements Runnable{
 	
 	/**
 	 * This function receives message from client, adds current timestamp and forwards to all other replicas
-	 * @param incomingMsg
+	 * @param incomingMsg handles the message sent to the server
 	 */
 	private void handleClient(KeyValue.KeyValueMessage incomingMsg) {
 		
 		KeyValue.KeyValueMessage.Builder keyValueBuilder = null;
 		
-		//recevied put msg from client
+		//received put message from client
 		if(incomingMsg.hasPutKey()) {
 			
 			KeyValue.Put putMessage = incomingMsg.getPutKey();
@@ -116,8 +126,11 @@ public class Coordinator implements Runnable{
 			keyValueBuilder.setGetKey(getServer.build());
 		
 	//		System.out.println("Servers connected " + sc.getCountConnectedServers());
+			
+			/* Checks if the number of servers connected is less than consistency level, if true sends exception message to client
+			*  or sends the key value message to other servers
+			*/
 			if(sc.getCountConnectedServers() < consistency) {
-				System.out.println("Exception message");
 				System.out.println("Exception message");
 				KeyValue.KeyValueMessage.Builder keyMessage = KeyValue.KeyValueMessage.newBuilder();
 				KeyValue.Exception.Builder excep = KeyValue.Exception.newBuilder();
@@ -144,14 +157,14 @@ public class Coordinator implements Runnable{
 
 	/**
 	 * This function creates new socket connection to all replica servers and forwards message to servers
-	 * @param in
+	 * @param keyIn KeyValue message to send to other servers 
 	 */
 	private void sendToServers(KeyValue.KeyValueMessage.Builder keyIn) {
 		
-		for(String serverName : sc.serversIp.keySet()) {
+		for(String serverName : ServerContext.serversIp.keySet()) {
 			try {
 				keyIn.setServerName(sc.getName());
-				Socket socket = new Socket(sc.serversIp.get(serverName), sc.serversPort.get(serverName));
+				Socket socket = new Socket(ServerContext.serversIp.get(serverName), ServerContext.serversPort.get(serverName));
 				OutputStream out = socket.getOutputStream();
 				keyIn.build().writeDelimitedTo(out);
 				sc.addConnectedServers(serverName, true);
@@ -184,7 +197,7 @@ public class Coordinator implements Runnable{
 				
 				sc.addhintServers(serverName, false);
 				
-				//add the key to the hashmap to send it later
+				//add the key to the HashMap to send it later, Hinted Hand-off
 				if(keyIn.hasPutKey()) {
 					ArrayList<KeyValue.HintedHandoff> ls = null;
 					if(sc.hintedHandoffMap.containsKey(serverName)) {
@@ -212,8 +225,9 @@ public class Coordinator implements Runnable{
 	
 	/**
 	 * This function updates the consistency map and responds to client accordingly
-	 * @param server name, responseMsg
-	 * @throws IOException
+	 * @param serverName Server name 
+	 * @param responseMsg the response message that is sent to the client
+ 	 * @throws IOException if client is not connected 
 	 */
 	private synchronized void handleServer(String serverName, KeyValue.KeyValueMessage responseMsg) throws IOException {
 		
@@ -250,7 +264,7 @@ public class Coordinator implements Runnable{
 		}
 		
 		if(responseMsg.hasReadResponse()) {
-			//System.out.println("----------------------Recevied read response from " + serverName);
+			//System.out.println("Received read response from " + serverName);
 			KeyValue.ReadResponse rr = responseMsg.getReadResponse();
 			int id = rr.getId();
 			
@@ -271,6 +285,7 @@ public class Coordinator implements Runnable{
 				}
 				readRepairMap.get(id).setReadStatus(true);
 				readRepairMap.get(id).serversTimestamp.put(serverName, time);
+				
 				//Checks if the received message has a timestamp greater than the one in readRepairMap for the id; if true replaces with the latest timestamp;
 				if(time > readRepairMap.get(id).getTimestamp()) {
 					readRepairMap.get(id).setId(id);
@@ -284,7 +299,7 @@ public class Coordinator implements Runnable{
 				
 				//if received message has a timestamp lesser than the one in readRepairMap, then the corresponding server has to be sent the updated key-value pair
 				if(time < readRepairMap.get(id).getTimestamp()) {
-					//System.out.println("Read Repair shud be performed on  " + serverName);
+					//System.out.println("Read Repair should be performed on  " + serverName);
 					readRepairMap.get(id).addServers(serverName, false);
 					readRepairMap.get(id).setReadRepairStatus(true);
 				}
@@ -317,7 +332,7 @@ public class Coordinator implements Runnable{
 				}
 				
 			}
-			//returned null for the key, means it does not have value
+			//return value null for the readStatus, means it does not have value and read repair has to be performed.
 			else {
 				int key = rr.getKeyval().getKey();
 				
@@ -327,12 +342,13 @@ public class Coordinator implements Runnable{
 					readRepairMap.put(id,r);			
 				}
 				
-				//System.out.println("Read Repair shud be performed on(empty response) " + serverName);
+				//System.out.println("Read Repair should be performed on(empty response) " + serverName);
 				readRepairMap.get(id).addServers(serverName, false);
 				
 			}
 											
-			//All the responses received.. update inconsistant data in other servers if any exist
+			//all the responses received.. update inconsistent data in other servers if any exist.
+			
 			//System.out.println("-->" + repliesMap.get(id) + " " + sc.getCountConnectedServers());
 			if(repliesMap.get(id) == sc.getCountConnectedServers()) {
 				if(consistencyMap.get(id) != -1 && readRepairMap.get(id).checkConsistency(consistencyMap.get(id)) == false) {
@@ -383,8 +399,8 @@ public class Coordinator implements Runnable{
 	
 	/**
 	 * This function starts read repair in background if any inconsistent data
-	 * @param serverName
-	 * @param id - request,response id
+	 * @param serverName  Server Name
+	 * @param id  the id of the key value message for which read repair is performed
 	 */
 	private void startReadRepairInBackground(String serverName, int id) {
 	
@@ -413,7 +429,7 @@ public class Coordinator implements Runnable{
 						try {
 							
 							System.out.println("Sending readRepair message to " + name + "  Key:  " + readRepairMap.get(id).getKey());
-							Socket sock = new Socket(sc.serversIp.get(name), sc.serversPort.get(name));
+							Socket sock = new Socket(ServerContext.serversIp.get(name), ServerContext.serversPort.get(name));
 							OutputStream out = sock.getOutputStream();
 							keyMessage.build().writeDelimitedTo(out);
 							out.flush();
@@ -452,7 +468,7 @@ public class Coordinator implements Runnable{
 	@Override
 	public void run() {
 		
-		//Processing the first keyValue message received from the client
+		//Processes the first keyValue message received from the client
 		if(keyValueMsg != null) {
 			handleClient(keyValueMsg);
 		}

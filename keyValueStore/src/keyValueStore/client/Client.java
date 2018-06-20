@@ -12,6 +12,12 @@ import keyValueStore.keyValue.KeyValue;
 import keyValueStore.util.FileProcessor;
 import keyValueStore.util.uniqueIdGenerator;
 
+/**
+* 
+* @author  Surendra kumar Koneti
+* @since   2017-11-22
+*/
+
 public class Client{
 		
 	public static void main(String [] args) {
@@ -23,13 +29,14 @@ public class Client{
 		
 		Scanner scan = new Scanner(System.in);
 		
+		//incoming messages from the server.
 		Thread receive = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				while(true) {
 					try {
-						InputStream in = cc.sock.getInputStream();
+						InputStream in = ClientContext.sock.getInputStream();
 						KeyValue.KeyValueMessage incomingMsg = KeyValue.KeyValueMessage.parseDelimitedFrom(in);
 						
 						if(incomingMsg != null) {
@@ -66,7 +73,6 @@ public class Client{
 							}
 						}
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -74,6 +80,7 @@ public class Client{
 			}			
 		});
 		
+		//Command line input by the user, Key and its value.
 		while(true) {
 			String value = scan.next();
 			if(value == null){
@@ -125,8 +132,8 @@ public class Client{
 				continue;
 			}
 			try {				
-				if(cc.sock == null) {
-					cc.sock = new Socket(cc.coIp,cc.coPort);
+				if(ClientContext.sock == null) {
+					ClientContext.sock = new Socket(ClientContext.coIp,ClientContext.coPort);
 					keyMessage.setConnection(1);
 					receive.start();
 				}
